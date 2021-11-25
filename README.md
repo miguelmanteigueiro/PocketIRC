@@ -7,3 +7,7 @@ IRC mobile app for android and IOS (just kidding)
 - Swift
 - Obj-C
 - Kotlin
+- OCCAM
+- Ocaml
+- F#
+- UML (for Software Engineering)
