@@ -1,0 +1,13 @@
+- Server class (send and receive) 2*threads
+- Parser (filter received data)
+- Commands
+
+- Layout
+  - Login
+  - Chat room
+  - Channel Settings
+  - User Settings
+  - List Users
+  - List Channels
+  - App Settings
+  ...
