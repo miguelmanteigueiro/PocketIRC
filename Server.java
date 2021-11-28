@@ -1,7 +1,7 @@
 import java.io.*;
 import java.net.*;
 
-public class Server{
+public class Server throws Exception{
   int port;
   String ip;
 
