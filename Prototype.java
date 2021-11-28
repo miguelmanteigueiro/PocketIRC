@@ -40,7 +40,7 @@ public class Prototype {
 
     out.println("NICK userHeni \r\nPASS userheni123 \r\nUSER userHeni userHeni userHeni :garfadadesopa \r\n");
     //out.println("USER " + user + " " + user + " " + user + " " + " :sopa \r\n");
-    out.println("JOIN " + channel + ", " + "userheni123" + "\r\n");
+    out.println("JOIN " + channel + "\r\n");
 
     // create threads to receive and send data
     Thread receive = new Thread(() -> {
