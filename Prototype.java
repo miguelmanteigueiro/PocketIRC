@@ -24,7 +24,7 @@ public class Prototype {
 
   public static void main(String[] args) throws Exception {
     String nick = "userHeni";
-    String user = "heni heni heni";
+    String user = "userHeni";
     String channel = "#heni";
 
     // Create socket
@@ -37,9 +37,10 @@ public class Prototype {
     PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
 
     // log in
-    out.println("NICK " + nick + "\r\n");
-    out.println("USER " + user + " " + user + " " + " :heni \r\n");
-    out.println("JOIN " + channel + "\r\n");
+
+    out.println("NICK userHeni \r\nPASS userheni123 \r\nUSER userHeni userHeni userHeni :garfadadesopa \r\n");
+    //out.println("USER " + user + " " + user + " " + user + " " + " :sopa \r\n");
+    out.println("JOIN " + channel + ", " + "userheni123" + "\r\n");
 
     // create threads to receive and send data
     Thread receive = new Thread(() -> {
