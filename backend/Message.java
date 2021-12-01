@@ -21,7 +21,7 @@ public class Message {
 
   // Getters e setters
   public String getAction()  {
-    return action
+    return action;
   }
   public String getChannel() {
     return channel;
@@ -68,5 +68,19 @@ public class Message {
   }
   public void setUser(String[] user) {
     this.user = user;
+  }
+  
+  @Override
+  public String toString() {
+    return "Message{" +
+            "server='" + server + '\'' +
+            ", channel='" + channel + '\'' +
+            ", recipient='" + recipient + '\'' +
+            ", user=" + java.util.Arrays.toString(user) +
+            ", type='" + type + '\'' +
+            ", msg='" + msg + '\'' +
+            ", action='" + action + '\'' +
+            ", code=" + code +
+            '}';
   }
 }

@@ -1,5 +1,7 @@
 import java.util.*;
 
+import javax.sound.sampled.SourceDataLine;
+
 public class Parser{
   
   public static String[] tokenize(String data){
@@ -15,7 +17,7 @@ public class Parser{
     return false;
   }
 
-	public static String getServer(String[] arr){
+  public static String getServer(String[] arr){
 		return arr[0].split(" ")[0];
 	}
 
@@ -47,8 +49,8 @@ public class Parser{
   }
 
   public static int getIRCCode(String[] arr){
-    int code;
     try{
+      int code;
       code = Integer.parseInt(arr[0].split(" ")[1]);
     }
     catch(NumberFormatException e){}
@@ -65,9 +67,10 @@ public class Parser{
   }
 
   public static String getMessage(String[] arr){
-    //return arr[0].split(" ")[2];
+    
+    System.out.println(Arrays.toString(arr));
     if(arr.length > 1){
-      return Arrays.copyOfRange(arr, 1, arr.length);
+      return arr[arr.length-1];
     }
     return "";
   }
@@ -77,7 +80,6 @@ public class Parser{
 		String channel = "";
 		String recipient = "";
 		String[] user = new String[3];
-		String type = "";
 		String msg = "";
     String action = "";
     int code = -1;
@@ -95,44 +97,32 @@ public class Parser{
       }
       code = getIRCCode(arr);
       channel = getChannel(arr);
-      message = getMessage(arr);
+      msg = getMessage(arr);
       if(action.equals("PART")){
-        message = channel;
+        msg = channel;
       }
       if(action.equals("JOIN")){
         channel = getMessage(arr);
       }
     }
 
-		System.out.println(server);
-		System.out.println(Arrays.toString(user));
-		System.out.println(action);
-		System.out.println(recipient);
-		System.out.println(code);
-		System.out.println(channel);
+    Message mesg = new Message();
+    mesg.setServer(server);
+    mesg.setUser(user);
+    mesg.setAction(action);
+    mesg.setRecipient(recipient);
+    mesg.setCode(code);
+    mesg.setChannel(channel);
+    mesg.setMsg(msg);
+
+    System.out.println(mesg);
   }
 
   public static void main(String[] args){
-    //String s = ":strontium.libera.chat 376 userHeni :End of /MOTD command." ;
-    String s = ":NickServ!NickServ@services.libera.chat NOTICE userHeni :This nickname is registered. Please choose a different nickname, or identify via /msg NickServ IDENTIFY userHeni <password>";
+    String s = ":strontium.libera.chat 376 userHeni :End of /MOTD command." ; //problemas para o eu do futuro
+    //String s = ":NickServ!NickServ@services.libera.chat NOTICE userHeni :This nickname is registered. Please choose a different nickname, or identify via /msg NickServ IDENTIFY userHeni <password>";
     String[] arr = tokenize(s);
-    System.out.println(Arrays.toString(arr));
+    //System.out.println(Arrays.toString(arr));
 		parser(arr);
   }
-
-
-
-
-
-
-
-  /*
-  public static void parser(String data){
-    String[] arr = data.split(":");   
-    String[] header = arr[1].split(" ");
-    String message = arr[2];
-    System.out.println(message);
-  }
-
-  */
 }
