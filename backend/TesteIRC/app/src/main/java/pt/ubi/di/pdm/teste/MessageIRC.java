@@ -1,4 +1,6 @@
-public class Message {
+package pt.ubi.di.pdm.teste;
+
+public class MessageIRC {
   String server;
   String channel;
   String recipient;
@@ -8,7 +10,7 @@ public class Message {
   String action;
   int code;
 
-  public Message(){
+  public MessageIRC(){
     String server = "";
     String channel = "";
     String recipient = "";

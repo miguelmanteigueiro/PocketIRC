@@ -59,7 +59,7 @@ public class Server{
     this.cmd.join(channel, keys);
   }
 
-  public void send_message(Editable message){
+  public void send_message(String message){
     this.out.println(message);
   }
 

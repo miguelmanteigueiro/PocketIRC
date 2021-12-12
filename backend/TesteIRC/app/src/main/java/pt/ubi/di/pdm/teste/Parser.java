@@ -1,13 +1,26 @@
+package pt.ubi.di.pdm.teste;
 import java.util.*;
 import java.io.*;
-
-import javax.sound.sampled.SourceDataLine;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Parser{
   
   public static String[] tokenize(String data){
-    String[] arr = data.split(":");   
+    String[] arr = data.split(":");
     return Arrays.copyOfRange(arr, 1, arr.length);  
+  }
+
+  public static String replaceIPV6(String data){
+    // Checks if IPV6 is present in the data, if so then replace it with 'ipv6'
+    Pattern pattern = Pattern.compile("(?:[0-9a-f]{1,4}:){7}[0-9a-f]{1,4}");
+    // define a matcher
+    Matcher matcher = pattern.matcher(data);
+    if(matcher.find()){
+      data = data.replace(matcher.group(), "ipv6");
+      return data;
+    }
+    return data;
   }
 
   public static boolean isServerMessage(String[] arr){
@@ -42,6 +55,7 @@ public class Parser{
   }
 
   public static String getAction(String[] arr){
+    System.out.println(Arrays.toString(arr));
     return arr[0].split(" ")[1];
   }
 
@@ -52,8 +66,14 @@ public class Parser{
   public static int getIRCCode(String[] arr){
     try{
       int code;
-      code = Integer.parseInt(arr[0].split(" ")[1]);
-      return code;
+      String[] aux = arr[0].split(" ");
+      if(aux.length > 1){
+        code = Integer.parseInt(arr[0].split(" ")[1]);
+        return code;
+      }
+      else{
+        return -1;
+      }
     }
     catch(NumberFormatException e){}
     return -1;
@@ -77,7 +97,7 @@ public class Parser{
     return "";
   }
 
-  public static Message parser(String[] arr){
+  public static MessageIRC parser(String[] arr){
 		String server = "";
 		String channel = "";
 		String recipient = "";
@@ -108,7 +128,7 @@ public class Parser{
       channel = getMessage(arr);
     }
 
-    Message mesg = new Message();
+    MessageIRC mesg = new MessageIRC();
     mesg.setServer(server);
     mesg.setUser(user);
     mesg.setAction(action);
@@ -117,25 +137,12 @@ public class Parser{
     mesg.setChannel(channel);
     mesg.setMsg(msg);
 
-    //System.out.println(mesg.toString());
     return mesg;
   }
 
-  public static void main(String[] args){
-
-   	try {
-      File myObj = new File("sample");
-      Scanner myReader = new Scanner(myObj);
-      while (myReader.hasNextLine()) {
-        String data = myReader.nextLine();
-        String[] arr = tokenize(data);
-        System.out.println(parser(arr).toString());
-        System.out.println();
-      }
-      myReader.close();
-    } catch (FileNotFoundException e) {
-      System.out.println("An error occurred.");
-      e.printStackTrace();
-    }  
+  public static String parse_message(String message){
+    message = replaceIPV6(message);
+    String[] arr = tokenize(message);
+    return parser(arr).toString();
   }
 }

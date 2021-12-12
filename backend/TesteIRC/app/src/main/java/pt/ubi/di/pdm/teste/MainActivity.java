@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.text.Editable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -57,20 +58,20 @@ public class MainActivity extends AppCompatActivity {
     Runnable consumer = new Runnable() {
       public void run() {
         while(true) {
-          String message = null;
+          final String[] message = {null};
           try {
-            message = queue.take();
+            message[0] = queue.take();
           } catch (InterruptedException e) {
             e.printStackTrace();
           }
-          String finalMessage = message;
+          //String finalMessage = message;
           tv.post(new Runnable() {
             @Override
             public void run() {
               /* Parse the message */
-
+              message[0] = Parser.parse_message(message[0]);
               /* ----------------- */
-              tv.setText(finalMessage);
+              tv.setText(message[0]);
             }
           });
         }
@@ -84,7 +85,12 @@ public class MainActivity extends AppCompatActivity {
     bt.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
-        server.send_message(et.getText());
+        String msg = et.getText().toString();
+        // Check if msg is a command
+        if(Commands.checkIfCommand(msg)){
+
+        }
+        server.send_message(msg);
       }
     });
 
