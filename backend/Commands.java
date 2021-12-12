@@ -1,18 +1,7 @@
 /* Commands:
-- away      FEITO
-- back      FEITO
 - clear     TODO NO ANDROID
-- cycle     FEITO
 - ignore    NOT NOW
-- invite    FEITO
-- kick      FEITO
-- msg       FEITO
-- nick      FEITO
-- notice    FEITO
-- part      FEITO
-- topic     FEITO
 - unignore  NOT NOW
-- whois     FEITO
 */
 
 class Commands{

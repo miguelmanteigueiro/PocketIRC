@@ -1,5 +1,7 @@
 package pt.ubi.di.pdm.teste;
 
+import android.text.Editable;
+
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
@@ -18,9 +20,7 @@ public class Server{
   Socket socket;
   BufferedReader in;
   PrintWriter out;
-
-  Thread receive;
-  Thread send;
+  Commands cmd;
 
   public Server(String ip, int port){
     assert (ip != null);
@@ -28,6 +28,7 @@ public class Server{
     this.port = port;
     this.channels = new ArrayList<String>();
 
+    // Create socket
     try{
       this.socket = new Socket(ip, port);
       this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -36,6 +37,7 @@ public class Server{
     catch (IOException e){
       System.out.println(e);
     }
+    this.cmd = new Commands(this.out);
   }
 
   public void login(String nick, String pass, String user, String realname){
@@ -45,37 +47,23 @@ public class Server{
     this.realname = realname;
     
     // send login command
-    this.out.println("NICK " + this.nick + " \r\n");
-    this.out.println("PASS " + this.pass + " \r\n");
-    this.out.println("USER " + this.user + " " + this.user + " " + this.user + " " + this.realname + " \r\n");
-
+    this.cmd.nick(this.nick);
+    this.cmd.pass(this.pass);
+    this.cmd.user(this.user, this.user, this.user, this.realname);
   }
-
-  public void join(String channel){
-    assert (channel.charAt(0) == '#');
+  public void join(String channel, String keys){
+    // Check if channel starts with '#'
+    // If not toast error
+    //if(channels.charAt(0) == '#'){};
     this.channels.add(channel);
-    
-    this.out.println("JOIN " + channel + " \r\n");
-  }
-  
-  public String receive_data(){
-      try {
-        String data = this.in.readLine();
-        if(data != null){
-          return data;
-        }
-      }
-      catch(IOException e){
-        return "jafosteException";
-      }
-      return "jafosteNemFoste";
+    this.cmd.join(channel, keys);
   }
 
-  public void send_data() throws Exception{
-    BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
-    while(true){
-      String data = stdIn.readLine();
-      this.out.println(data);
-    }
+  public void send_message(Editable message){
+    this.out.println(message);
+  }
+
+  public String receive_message() throws Exception{
+    return this.in.readLine();
   }
 }
