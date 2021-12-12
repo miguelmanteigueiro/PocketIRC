@@ -99,4 +99,9 @@ class Commands{
   public void join(String channels, String keys){
     this.out.println("JOIN " + channels + " " + keys + suffix);
   }
+
+  // check if string begins with /
+  public static boolean checkIfCommand(String s){
+    return s.charAt(0) == '/';
+  }
 }
