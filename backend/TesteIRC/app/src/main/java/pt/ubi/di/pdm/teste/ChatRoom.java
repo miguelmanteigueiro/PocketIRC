@@ -126,7 +126,7 @@ public class ChatRoom extends Activity implements MessageRecyclerViewAdapter.Ite
 
                 System.out.println("MESSAGE: " + m.toString());
                 channels_messageList.get(channel).add(0, m);
-
+                // TODO: Alterar o channel
                 messageAdapter = new MessageRecyclerViewAdapter(getApplicationContext(), channels_messageList.get(channel));
                 messageRecyclerView.setAdapter(messageAdapter);
                 messageAdapter.setClickListener(ChatRoom.this);

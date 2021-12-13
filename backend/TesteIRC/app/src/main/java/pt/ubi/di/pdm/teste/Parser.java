@@ -116,10 +116,15 @@ public class Parser{
       action = getAction(arr);
       if(action.equals("NOTICE") || action.equals("PRIVMSG")){
         recipient = getRecipient(arr);
+        if(recipient.charAt(0) != '#'){
+          channel = user[0];
+        }
       }
     }
     code = getIRCCode(arr);
-    channel = getChannel(arr);
+    if(channel.equals("")){
+      channel = getChannel(arr);
+    }
     msg = getMessage(arr);
 
     MessageIRC mesg = new MessageIRC();
