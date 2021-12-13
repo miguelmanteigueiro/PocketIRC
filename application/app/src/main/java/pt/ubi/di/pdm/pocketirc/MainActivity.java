@@ -24,6 +24,7 @@ public class MainActivity extends Activity{
   }
   /**
    * Shows a dialog to confirm user leaving the app
+   * Making him able to use the application (69 gottem)
    */
   @Override
   public void onBackPressed(){
