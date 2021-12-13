@@ -104,4 +104,60 @@ class Commands{
   public static boolean checkIfCommand(String s){
     return s.charAt(0) == '/';
   }
+
+  public static String replaceCommand(String s){
+    if(s.startsWith("/msg")){
+      String replaced = s.replace("/msg", "PRIVMSG");
+      return replaced;
+    }
+    if(s.startsWith("/me")){
+      String replaced = s.replace("/me", "ACTION");
+      return replaced;
+    }
+    if(s.startsWith("/back")){
+      String replaced = s.replace("/back", "AWAY");
+      return replaced;
+    }
+    if(s.startsWith("/away")){
+      String replaced = s.replace("/away", "AWAY");
+      return replaced;
+    }
+    if(s.startsWith("/part")){
+      String replaced = s.replace("/part", "PART");
+      return replaced;
+    }
+    if(s.startsWith("/join")){
+      String replaced = s.replace("/join", "JOIN");
+      return replaced;
+    }
+    if(s.startsWith("/whois")){
+      String replaced = s.replace("/whois", "WHOIS");
+      return replaced;
+    }
+    if(s.startsWith("/notice")){
+      String replaced = s.replace("/notice", "NOTICE");
+      return replaced;
+    }
+    if(s.startsWith("/invite")){
+      String replaced = s.replace("/invite", "INVITE");
+      return replaced;
+    }
+    if(s.startsWith("/kick")){
+      String replaced = s.replace("/kick", "KICK");
+      return replaced;
+    }
+    if(s.startsWith("/pass")){
+      String replaced = s.replace("/pass", "PASS");
+      return replaced;
+    }
+    if(s.startsWith("/nick")){
+      String replaced = s.replace("/nick", "NICK");
+      return replaced;
+    }
+    if(s.startsWith("/user")){
+      String replaced = s.replace("/user", "USER");
+      return replaced;
+    }
+    return s; //failsafe
+  }
 }
