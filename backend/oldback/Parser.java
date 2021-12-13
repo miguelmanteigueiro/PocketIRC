@@ -101,12 +101,14 @@ public class Parser{
     code = getIRCCode(arr);
     channel = getChannel(arr);
     msg = getMessage(arr);
+    /*
     if(action.equals("PART")){
       msg = channel;
     }
     if(action.equals("JOIN")){
       channel = getMessage(arr);
     }
+    */
 
     Message mesg = new Message();
     mesg.setServer(server);

@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Calendar;
 import java.util.concurrent.BlockingQueue;
@@ -54,8 +55,11 @@ public class ChatRoom extends Activity implements MessageRecyclerViewAdapter.Ite
     messageRecyclerView.setAdapter(messageAdapter);
     messageAdapter.setClickListener(this);
 
+    // HashMap that handles the messages by channels
+    HashMap<String, ArrayList<MessageIRC>> channels_messageList = new HashMap<String, ArrayList<MessageIRC>>();
 
-    /* Threads */
+
+    /* Server connection and threads */
     StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
     StrictMode.setThreadPolicy(policy);
 
@@ -93,51 +97,55 @@ public class ChatRoom extends Activity implements MessageRecyclerViewAdapter.Ite
             e.printStackTrace();
           }
 
-          //String finalMessage = message;
-          /*
-          tv.post(new Runnable() {
-            @Override
-            public void run() {
-
-              message = Parser.parse_message(message);
-
-              tv.setText(message);
-            }
-          });
-          */
           String finalMessage = message;
           runOnUiThread(new Runnable() {
             @Override
             public void run() {
               //Message received from chat
               MessageIRC m = Parser.parse_message(finalMessage);
+              String channel = m.getChannel();
 
-              //Checks if the previous message is the user's or there are none
-              if(m.getAction().equals("PRIVMSG") && (messageList.size() == 0 || !messageList.get(0).getAction().equals("PRIVMSG") || !messageList.get(0).getUser()[0].equals(m.getUser()[0])))
-              {
-                Calendar cal = Calendar.getInstance();
-                //This add is the username that appears on the screen
-                MessageIRC aux = new MessageIRC();
-                m.setHour(cal.get(Calendar.HOUR_OF_DAY) + ":" + cal.get(Calendar.MINUTE));
-                messageList.add(0,m);
+              if(!channel.equals("")){
+                if(!channels_messageList.containsKey(channel)){
+                  channels_messageList.put(channel, new ArrayList<>());
+                }
               }
 
-              messageList.add(0,m);
-              messageAdapter = new MessageRecyclerViewAdapter(getApplicationContext(), messageList);
-              messageRecyclerView.setAdapter(messageAdapter);
-              messageAdapter.setClickListener(ChatRoom.this);
+              if(m.getIs_user()){
+                //Checks if the previous message is the user's or there are none
+                if(m.getAction().equals("PRIVMSG") && (channels_messageList.get(channel).size() == 0 || !channels_messageList.get(channel).get(0).getAction().equals("PRIVMSG") || !channels_messageList.get(channel).get(0).getUser()[0].equals(m.getUser()[0]))) {
+                  Calendar cal = Calendar.getInstance();
+                  //This add is the username that appears on the screen
+                  m.setHour(cal.get(Calendar.HOUR_OF_DAY) + ":" + cal.get(Calendar.MINUTE));
+
+                  // checks if hashmap contains channel
+                  // if so append the message to the existent message list
+                  // if don't create a new list and then append the message to it
+                  channels_messageList.get(channel).add(0, m);
+                }
+
+                System.out.println("MESSAGE: " + m.toString());
+                channels_messageList.get(channel).add(0, m);
+
+                messageAdapter = new MessageRecyclerViewAdapter(getApplicationContext(), channels_messageList.get(channel));
+                messageRecyclerView.setAdapter(messageAdapter);
+                messageAdapter.setClickListener(ChatRoom.this);
+
+              }
+              else{
+                if(!channels_messageList.containsKey("NickServer")){
+                  channels_messageList.put("NickServer", new ArrayList<>());
+                }
+                channels_messageList.get("NickServer").add(m);
+              }
             }
           });
-
-
         }
       }
     };
 
     new Thread(producer).start();
     new Thread(consumer).start();
-
-    /* Threads */
 
 
     //User a
@@ -163,8 +171,7 @@ public class ChatRoom extends Activity implements MessageRecyclerViewAdapter.Ite
           m.setUser(new String[]{"Simao", "a", "a"});
 
           //Checks if the previous message is the user's or there are none
-          if(messageList.size() == 0 || !messageList.get(0).getUser()[0].equals(m.getUser()[0]))
-          {
+          if(messageList.size() == 0 || !messageList.get(0).getUser()[0].equals(m.getUser()[0])){
             messageList.add(0,m);
           }
 

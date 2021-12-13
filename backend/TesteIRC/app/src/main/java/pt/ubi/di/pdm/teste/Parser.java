@@ -25,7 +25,7 @@ public class Parser{
 
   public static boolean isServerMessage(String[] arr){
     String aux = arr[0].split(" ")[0];
-    if(!aux.contains("!")){
+    if(!aux.contains("!") || aux.contains("NickServ")){
       return true;
     }
     return false;
@@ -121,12 +121,6 @@ public class Parser{
     code = getIRCCode(arr);
     channel = getChannel(arr);
     msg = getMessage(arr);
-    if(action.equals("PART")){
-      msg = channel;
-    }
-    if(action.equals("JOIN")){
-      channel = getMessage(arr);
-    }
 
     MessageIRC mesg = new MessageIRC();
     mesg.setServer(server);
