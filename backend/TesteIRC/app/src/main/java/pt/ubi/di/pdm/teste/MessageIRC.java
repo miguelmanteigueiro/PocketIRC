@@ -8,6 +8,7 @@ public class MessageIRC {
   String type;
   String msg;
   String action;
+  String hour;
   int code;
 
   public MessageIRC(){
@@ -71,7 +72,13 @@ public class MessageIRC {
   public void setUser(String[] user) {
     this.user = user;
   }
-  
+  public String getHour() {
+    return hour;
+  }
+
+  public void setHour(String hour) {
+    this.hour = hour;
+  }
   @Override
   public String toString() {
     return "Message{" +

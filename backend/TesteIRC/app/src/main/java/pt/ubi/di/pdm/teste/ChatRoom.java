@@ -34,7 +34,7 @@ public class ChatRoom extends Activity implements MessageRecyclerViewAdapter.Ite
   protected void onCreate(Bundle savedInstanceState) {
     //Initiate the view
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_main);
+    setContentView(R.layout.chatroom);
 
     //Initiate the widgets
     sendButton = (ImageButton)findViewById(R.id.chat_sendButton);
