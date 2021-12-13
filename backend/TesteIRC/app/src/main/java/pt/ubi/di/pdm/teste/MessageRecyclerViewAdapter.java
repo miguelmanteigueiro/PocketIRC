@@ -13,12 +13,12 @@ import java.util.List;
 
 public class MessageRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
-    private List<Message> mData;
+    private List<MessageIRC> mData;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
 
     // data is passed into the constructor
-    MessageRecyclerViewAdapter(Context context, List<Message> data) {
+    MessageRecyclerViewAdapter(Context context, List<MessageIRC> data) {
         this.mInflater = LayoutInflater.from(context);
         this.mData = data;
     }
@@ -70,7 +70,7 @@ public class MessageRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
-        Message ap = mData.get(position);
+        MessageIRC ap = mData.get(position);
             if (holder instanceof MessageViewHolder) {
                 ((MessageViewHolder) holder).messageTextView.setText(ap.getMsg().toString());
             } else if (holder instanceof UserViewHolder) {
@@ -121,7 +121,7 @@ public class MessageRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     }
 
     // convenience method for getting data at click position
-    Message getItem(int id) {
+    MessageIRC getItem(int id) {
         return mData.get(id);
     }
 
