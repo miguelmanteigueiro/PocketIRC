@@ -177,14 +177,8 @@ public class LoginActivity extends Activity{
    */
   private String formatChannel(String channel){
     StringBuilder formattedChannel=new StringBuilder("#");
-    boolean hasFoundChar=false;
     for(Character c:channel.toCharArray()){
-      if(!hasFoundChar&&c!='#'){
-        hasFoundChar=true;
-      }
-      if(hasFoundChar){
-        formattedChannel.append(c);
-      }
+      formattedChannel.append(c);
     }
     return formattedChannel.toString().equals("#")?"#libera":formattedChannel.toString();
   }
