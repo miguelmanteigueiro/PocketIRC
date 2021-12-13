@@ -55,7 +55,6 @@ public class Parser{
   }
 
   public static String getAction(String[] arr){
-    System.out.println(Arrays.toString(arr));
     return arr[0].split(" ")[1];
   }
 
@@ -89,8 +88,7 @@ public class Parser{
   }
 
   public static String getMessage(String[] arr){
-    
-    System.out.println(Arrays.toString(arr));
+
     if(arr.length > 1){
       return arr[arr.length-1];
     }
@@ -98,16 +96,18 @@ public class Parser{
   }
 
   public static MessageIRC parser(String[] arr){
-		String server = "";
-		String channel = "";
-		String recipient = "";
-		String[] user = new String[3];
-		String msg = "";
+    String server = "";
+    String channel = "";
+    String recipient = "";
+    String[] user = new String[3];
+    String msg = "";
     String action = "";
     int code = -1;
+    boolean is_user = true;
 
     if(isServerMessage(arr)){
     	server = getServer(arr);
+    	is_user = false;
     }
     else{
       user[0] = strippedNickname(getNickname(arr));
@@ -136,13 +136,14 @@ public class Parser{
     mesg.setCode(code);
     mesg.setChannel(channel);
     mesg.setMsg(msg);
-
+    mesg.setIs_user(is_user);
+    System.out.println(mesg.toString());
     return mesg;
   }
 
-  public static String parse_message(String message){
+  public static MessageIRC parse_message(String message){
     message = replaceIPV6(message);
     String[] arr = tokenize(message);
-    return parser(arr).toString();
+    return parser(arr);
   }
 }

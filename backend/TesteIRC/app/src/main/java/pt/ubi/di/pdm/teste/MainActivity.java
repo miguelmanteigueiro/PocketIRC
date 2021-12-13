@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
               @Override
               public void run() {
                 /* Parse the message */
-                message[0] = Parser.parse_message(message[0]);
+                //message[0] = Parser.parse_message(message[0]);
                 /* ----------------- */
                 tv.setText(message[0]);
               }

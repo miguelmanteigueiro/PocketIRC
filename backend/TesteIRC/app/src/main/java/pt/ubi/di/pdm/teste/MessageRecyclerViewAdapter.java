@@ -2,6 +2,7 @@ package pt.ubi.di.pdm.teste;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,16 +27,43 @@ public class MessageRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     //go through the entire list and gives each row its layout
     @Override
     public int getItemViewType(int position) {
+        //JOIN MESSAGE
+        if(mData.get(position).getAction().equals("JOIN"))
+        {
+            mData.get(position).setMsg("<- " + mData.get(position).getUser()[0] + " joined");
+            return R.layout.join_leave_recycler_view_row;
+        }
+
+        //PART MESSAGE
+        if(mData.get(position).getAction().equals("PART"))
+        {
+            mData.get(position).setMsg("<- " + mData.get(position).getUser()[0] + " left");
+            return R.layout.join_leave_recycler_view_row;
+        }
+
+        //QUIT MESSAGE
+        if(mData.get(position).getAction().equals("QUIT"))
+        {
+            mData.get(position).setMsg("<- " + mData.get(position).getUser()[0] + " quited");
+            return R.layout.join_leave_recycler_view_row;
+        }
+
+        //LAST ELEMENT
         if(position == mData.size() -1)
         {
             return R.layout.user_recycler_view_row;
         }
 
-        if(mData.get(position).getUser()[0].equals(mData.get(position + 1).getUser()[0])){
-            return R.layout.message_recycler_view_row;
-        }else{
-            return R.layout.user_recycler_view_row;
+        //USER MESSAGES
+        if(mData.get(position).getIs_user() && mData.get(position).getAction().equals("PRIVMSG")) {
+            if (mData.get(position).getUser()[0].equals(mData.get(position + 1).getUser()[0]) && mData.get(position + 1).getAction().equals("PRIVMSG")) {
+                return R.layout.message_recycler_view_row;
+            } else {
+                return R.layout.user_recycler_view_row;
+            }
         }
+
+        return R.layout.message_recycler_view_row;
     }
 
     // inflates the row layout from xml when needed
@@ -56,6 +84,11 @@ public class MessageRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             view = mInflater.inflate(R.layout.user_recycler_view_row, parent, false);
             holder = new UserViewHolder(view);
         }
+        else if(viewType == R.layout.join_leave_recycler_view_row)
+        {
+            view = mInflater.inflate(R.layout.join_leave_recycler_view_row, parent, false);
+            holder = new EnterLeaveViewHolder(view);
+        }
         //Default case
         else
         {
@@ -72,10 +105,18 @@ public class MessageRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
         MessageIRC ap = mData.get(position);
             if (holder instanceof MessageViewHolder) {
-                ((MessageViewHolder) holder).messageTextView.setText(ap.getMsg().toString());
+                ((MessageViewHolder) holder).messageTextView.setText(ap.getMsg());
             } else if (holder instanceof UserViewHolder) {
-                ((UserViewHolder) holder).userTextView.setText(ap.getUser()[0].toString());
+                ((UserViewHolder) holder).userTextView.setText(ap.getUser()[0]);
+                //Alterar cor de texto de utilizador aqui
                 ((UserViewHolder) holder).hourTextView.setText(ap.getHour());
+            } else if (holder instanceof EnterLeaveViewHolder) {
+                if(mData.get(position).getAction().equals("JOIN"))
+                    ((EnterLeaveViewHolder) holder).elTextView.setTextColor(Color.GREEN);
+                else
+                    ((EnterLeaveViewHolder) holder).elTextView.setTextColor(Color.RED);
+
+                ((EnterLeaveViewHolder) holder).elTextView.setText(ap.getMsg());
             }
 
     }
@@ -111,6 +152,21 @@ public class MessageRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             super(itemView);
             userTextView = itemView.findViewById(R.id.chat_user);
             hourTextView = itemView.findViewById(R.id.chat_hour);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
+        }
+    }
+
+    public class EnterLeaveViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        TextView elTextView;
+
+        EnterLeaveViewHolder(View itemView) {
+            super(itemView);
+            elTextView = itemView.findViewById(R.id.el_message);
             itemView.setOnClickListener(this);
         }
 

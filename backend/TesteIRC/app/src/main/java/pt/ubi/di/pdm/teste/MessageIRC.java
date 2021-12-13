@@ -1,5 +1,7 @@
 package pt.ubi.di.pdm.teste;
 
+import java.util.Arrays;
+
 public class MessageIRC {
   String server;
   String channel;
@@ -10,6 +12,7 @@ public class MessageIRC {
   String action;
   String hour;
   int code;
+  boolean is_user;
 
   public MessageIRC(){
     String server = "";
@@ -47,6 +50,10 @@ public class MessageIRC {
   public String[] getUser() {
     return user;
   }
+  public boolean getIs_user() { return is_user; }
+  public String getHour() {
+    return hour;
+  }
 
   public void setAction(String action) {
     this.action = action;
@@ -72,24 +79,24 @@ public class MessageIRC {
   public void setUser(String[] user) {
     this.user = user;
   }
-  public String getHour() {
-    return hour;
-  }
-
+  public void setIs_user(boolean is_user) { this.is_user = is_user; }
   public void setHour(String hour) {
     this.hour = hour;
   }
+
   @Override
   public String toString() {
-    return "Message{" +
+    return "MessageIRC{" +
             "server='" + server + '\'' +
             ", channel='" + channel + '\'' +
             ", recipient='" + recipient + '\'' +
-            ", user=" + java.util.Arrays.toString(user) +
+            ", user=" + Arrays.toString(user) +
             ", type='" + type + '\'' +
             ", msg='" + msg + '\'' +
             ", action='" + action + '\'' +
+            ", hour='" + hour + '\'' +
             ", code=" + code +
+            ", is_user=" + is_user +
             '}';
   }
 }
