@@ -89,7 +89,6 @@ public class RegisterActivity extends Activity{
     }
     //register
     if(canRegister){
-      System.out.println("Username "+usernameString+" | Password: "+passwordString+" | Email: "+emailString); //delete
       //registerUser(usernameString,passwordString,emailString); //uncomment
       Intent confirmRegistrationIntent=new Intent(this,ConfirmRegisterActivity.class);
       confirmRegistrationIntent.putExtra("Email",emailString);

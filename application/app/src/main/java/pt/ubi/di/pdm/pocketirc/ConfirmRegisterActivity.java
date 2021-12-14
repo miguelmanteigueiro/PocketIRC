@@ -56,8 +56,8 @@ public class ConfirmRegisterActivity extends Activity{
     command.setBackgroundTintList(this.getResources().getColorStateList(R.color.buttonright));
     //confirm registration
     //confirm(commandString); //uncomment
-    //go to home activity
-    //Intent homeIntent=new Intent(this,HomeActivity.class); //uncomment
-    //startActivity(homeIntent); //uncomment
+    //go to login activity
+    Intent loginIntent=new Intent(this,LoginActivity.class);
+    startActivity(loginIntent);
   }
 }
