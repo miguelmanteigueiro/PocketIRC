@@ -41,6 +41,7 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
   TextView roomName;
   MessageRecyclerViewAdapter messageAdapter;
   RecyclerView messageRecyclerView;
+  Toolbar toolbar;
 
   //Instantiate the drawers
   private DrawerLayout drawerLayout;
@@ -50,6 +51,11 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
   //Create the private chats list and the chats list
   private ArrayList<String> chatsList;
   private ArrayList<String> privateChatsList;
+
+  //Chat variables
+  Commands cmd;
+  String userName;
+  String chatName;
 
 
   @Override
@@ -62,6 +68,7 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
     //Drawer Variables
     navView = (NavigationView) findViewById(R.id.nav_view);
     navView2 = (NavigationView) findViewById(R.id.nav_view2);
+    toolbar = (Toolbar) findViewById(R.id.chat_header);
 
     drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
 
@@ -132,24 +139,35 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
     // HashMap that handles the messages by channels
     HashMap<String, ArrayList<MessageIRC>> channels_messageList = new HashMap<String, ArrayList<MessageIRC>>();
 
-
     /* Server connection and threads */
     StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
     StrictMode.setThreadPolicy(policy);
 
+    userName = "userHeni";
+    chatName = "#heni";
+
+    toolbar.setTitle(chatName);
+
     Server server = new Server("irc.libera.chat", 6667);
-    server.login("userHeni", "userheni123", "userHeni", ":garfadaDeSopa");
-    server.join("#heni", "");
+    server.login(userName, "userheni123", "userHeni", ":garfadaDeSopa");
+    server.join(chatName, "");
+
+    cmd = new Commands(server.out);
 
     //Initialize the chat lists
     privateChatsList = new ArrayList<>();
     chatsList = new ArrayList<>();
-    chatsList.add("#heni"); //<--- MUDAR O HARDCODE
+    chatsList.add(chatName);
+
+    //Add to the hashmap
+    channels_messageList.put(chatName,new ArrayList<>());
 
     // create a blocking queue
     BlockingQueue<String> queue = new LinkedBlockingQueue<>();
 
     // create a producer and consumer
+
+    //Send message
     Runnable producer = new Runnable() {
       @Override
       public void run() {
@@ -166,6 +184,7 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
       }
     };
 
+    //Receive message
     Runnable consumer = new Runnable() {
       public void run() {
         while (true) {
@@ -201,7 +220,10 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
                 if(m.getAction().equals("PRIVMSG") && (channels_messageList.get(channel).size() == 0 || !channels_messageList.get(channel).get(0).getAction().equals("PRIVMSG") || !channels_messageList.get(channel).get(0).getUser()[0].equals(m.getUser()[0]))) {
                   Calendar cal = Calendar.getInstance();
                   //This add is the username that appears on the screen
-                  m.setHour(cal.get(Calendar.HOUR_OF_DAY) + ":" + cal.get(Calendar.MINUTE));
+                  String hour = String.valueOf(cal.get(Calendar.HOUR_OF_DAY));
+                  int auxMin = cal.get(Calendar.MINUTE);
+                  String minute = (auxMin < 10)? "0"+String.valueOf(auxMin) : String.valueOf(auxMin);
+                  m.setHour(hour+":"+minute);
 
                   // checks if hashmap contains channel
                   // if so append the message to the existent message list
@@ -236,7 +258,7 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
     new Thread(consumer).start();
 
 
-    //User a
+    //Send button
     sendButton.setOnClickListener(
       oView -> {
         String aux = sendMessage.getText().toString();
@@ -256,22 +278,35 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
           m.setHour(hour+":"+minute);
 
           //Update message user
-          m.setUser(new String[]{"Simao", "a", "a"});
+          m.setUser(new String[]{userName, userName, userName});
+          m.setIs_user(true);
+          m.setAction("PRIVMSG");
+          m.setChannel(chatName);
+          m.setRecipient(chatName);
 
-          //Checks if the previous message is the user's or there are none
-          if(messageList.size() == 0 || !messageList.get(0).getUser()[0].equals(m.getUser()[0])){
-            messageList.add(0,m);
+
+          //🩹🩹🩹🩹🩹🩹
+          if(!channels_messageList.get(chatName).isEmpty()) {
+            //Checks if the previous message is the user's or there are none
+            //channels_messageList.get(chatName).size() == 0 ||
+            if(!channels_messageList.get(chatName).get(0).getAction().equals("PRIVMSG") || !channels_messageList.get(chatName).get(0).getUser()[0].equals(m.getUser()[0])){
+              channels_messageList.get(chatName).add(0,m);
+            }
+
+            //Adds the message to the list
+            channels_messageList.get(chatName).add(0, m);
+
+            //Send message to server
+            cmd.msg(chatName, m.getMsg());
+
+            //Update recyclerView
+            messageAdapter = new MessageRecyclerViewAdapter(this, channels_messageList.get(chatName));
+            messageRecyclerView.setAdapter(messageAdapter);
+            messageAdapter.setClickListener(this);
           }
-
-          //Adds the message to the list
-          messageList.add(0,m);
-
-          //Update recyclerView
-          messageAdapter = new MessageRecyclerViewAdapter(this, messageList);
-          messageRecyclerView.setAdapter(messageAdapter);
-          messageAdapter.setClickListener(this);
-          System.out.println(m.getUser()[1]);
-
+          else{
+            Toast.makeText(ChatRoom.this, "Chat is loading", Toast.LENGTH_SHORT).show();
+          }
           //Empty chat text
           sendMessage.setText("");
         }
