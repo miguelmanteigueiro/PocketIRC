@@ -4,13 +4,22 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,7 +28,7 @@ import java.util.Calendar;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class ChatRoom extends Activity implements MessageRecyclerViewAdapter.ItemClickListener{
+public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAdapter.ItemClickListener{
 
   //Instantiate the list
   ArrayList<MessageIRC> messageList = new ArrayList<MessageIRC>();
@@ -33,6 +42,11 @@ public class ChatRoom extends Activity implements MessageRecyclerViewAdapter.Ite
   MessageRecyclerViewAdapter messageAdapter;
   RecyclerView messageRecyclerView;
 
+  //Instantiate the drawers
+  private DrawerLayout drawerLayout;
+  private NavigationView navView;
+  private NavigationView navView2;
+
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -40,11 +54,67 @@ public class ChatRoom extends Activity implements MessageRecyclerViewAdapter.Ite
     super.onCreate(savedInstanceState);
     setContentView(R.layout.chatroom);
 
+    //=======================================Drawers===============================================
+    //Drawer Variables
+    navView = (NavigationView) findViewById(R.id.nav_view);
+    navView2 = (NavigationView) findViewById(R.id.nav_view2);
+
+    drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+
+    Toolbar toolbar = (Toolbar) findViewById(R.id.chat_header);
+    setSupportActionBar(toolbar);
+
+    Button burguer1 = (Button) findViewById(R.id.switch1);
+    Button burguer2 = (Button) findViewById(R.id.switch2);
+
+    burguer1.setOnClickListener(v -> {
+      drawerLayout.openDrawer(navView);
+    });
+    burguer2.setOnClickListener(v -> {
+      drawerLayout.openDrawer(navView2);
+    });
+
+    navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+      @Override
+      public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+
+        if(id == R.id.channel) {
+          Toast.makeText(ChatRoom.this, "Channels", Toast.LENGTH_SHORT).show();
+        }
+        else if(id == R.id.privMassages) {
+          Toast.makeText(ChatRoom.this, "Private Messages", Toast.LENGTH_SHORT).show();
+        }
+        else if(id == R.id.random) {
+          Toast.makeText(ChatRoom.this, "Random", Toast.LENGTH_SHORT).show();
+        }
+        return true;
+      }
+    });
+    navView2.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+      @Override
+      public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+
+        if(id == R.id.channel2) {
+          Toast.makeText(ChatRoom.this, "Channels", Toast.LENGTH_SHORT).show();
+        }
+        else if(id == R.id.privMassages2) {
+          Toast.makeText(ChatRoom.this, "Private Messages", Toast.LENGTH_SHORT).show();
+        }
+        else if(id == R.id.random2) {
+          Toast.makeText(ChatRoom.this, "Random", Toast.LENGTH_SHORT).show();
+        }
+        return true;
+      }
+    });
+
+    //========================================================================================
+
+
     //Initiate the widgets
     sendButton = (ImageButton)findViewById(R.id.chat_sendButton);
-    userButton = (ImageButton)findViewById(R.id.chat_userButton);
     sendMessage = (EditText)findViewById(R.id.chat_sendMessageBox);
-    roomName = (TextView) findViewById(R.id.chat_roomName);
     messageRecyclerView = (RecyclerView) findViewById(R.id.chat_messageContainer);
 
     //Setup the message recycler view
