@@ -105,13 +105,19 @@ public class LoginActivity extends Activity{
     if(canLogIn){
       if(requiresPassword){
         //loginNonGuest(usernameString,passwordString,channelString); //uncomment
-        //Intent homeIntent=new Intent(this,HomeActivity.class); //uncomment
-        //startActivity(homeIntent); //uncomment
+        //Intent chatIntent=new Intent(this,ChatRoom.class); //uncomment
+        //chatIntent.putExtra("username",usernameString); //uncomment
+        //chatIntent.putExtra("password",passwordString); //uncomment
+        //chatIntent.putExtra("channel",channelString); //uncomment
+        //startActivity(chatIntent); //uncomment
       }
       else{
         //loginGuest(usernameString,channelString); //uncomment
-        //Intent homeIntent=new Intent(this,HomeActivity.class); //uncomment
-        //startActivity(homeIntent); //uncomment
+        //Intent chatIntent=new Intent(this,ChatRoom.class); //uncomment
+        //chatIntent.putExtra("username",usernameString); //uncomment
+        //chatIntent.putExtra("password",passwordString); //uncomment
+        //chatIntent.putExtra("channel",channelString); //uncomment
+        //startActivity(chatIntent); //uncomment
       }
     }
     else{
