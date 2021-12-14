@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.View;
@@ -51,15 +52,27 @@ public class LoginActivity extends Activity{
     username.setText("");
     password.setText("");
     channel.setText("");
-    //automatic log in if user is saved in shared preference
-    //if(SaveSharedPreference.getUserName(LoginActivity.this).length()!=0){
-    //  //go into the home activity if the user is logged in
-    //  goHome(SaveSharedPreference.getUserName(LoginActivity.this));
-    //}
   }
   /**
-   * Check if the credentials given by the user match some on the database
-   * and, if so, login the user; otherwise, show an error dialog
+   * Shows a dialog to confirm user leaving the app
+   */
+  @Override
+  public void onBackPressed(){
+    new AlertDialog.Builder(this)
+      .setTitle("Exit?")
+      .setMessage("Are you sure you want to exit the application?")
+      .setPositiveButton(android.R.string.yes,(dialog,which)->{
+        moveTaskToBack(true);
+        android.os.Process.killProcess(android.os.Process.myPid());
+        System.exit(1);
+      })
+      .setNegativeButton(android.R.string.no, null)
+      .setIcon(android.R.drawable.ic_lock_power_off)
+      .show();
+  }
+  /**
+   * Sends the login command to the server and logs the user, sending
+   * them to the home activity
    * @param v the current view
    */
   @SuppressLint("UseCompatLoadingForColorStateLists")
@@ -68,6 +81,9 @@ public class LoginActivity extends Activity{
     String usernameString=String.valueOf(username.getText());
     String passwordString=String.valueOf(password.getText());
     String channelString=String.valueOf(channel.getText());
+    //reset tint to default state
+    username.setBackgroundTintList(this.getResources().getColorStateList(R.color.buttonright));
+    password.setBackgroundTintList(this.getResources().getColorStateList(R.color.buttonright));
     //check parameters
     boolean canLogIn=true;
     if(!checkString(usernameString)){
@@ -85,16 +101,17 @@ public class LoginActivity extends Activity{
       }
     }
     channelString=formatChannel(channelString);
-    //reset tint to default state
-    username.setBackgroundTintList(this.getResources().getColorStateList(R.color.buttonright));
-    password.setBackgroundTintList(this.getResources().getColorStateList(R.color.buttonright));
     //log in
     if(canLogIn){
       if(requiresPassword){
-        //loginNonGuest(usernameString,passwordString,channelString);
+        //loginNonGuest(usernameString,passwordString,channelString); //uncomment
+        //Intent homeIntent=new Intent(this,HomeActivity.class); //uncomment
+        //startActivity(homeIntent); //uncomment
       }
       else{
-        //loginGuest(usernameString,channelString);
+        //loginGuest(usernameString,channelString); //uncomment
+        //Intent homeIntent=new Intent(this,HomeActivity.class); //uncomment
+        //startActivity(homeIntent); //uncomment
       }
     }
     else{
@@ -110,8 +127,8 @@ public class LoginActivity extends Activity{
    * @param v the current view
    */
   public void register(View v){
-    //Intent registerIntent=new Intent(this,RegisterActivity.class);
-    //startActivity(registerIntent);
+    Intent registerIntent=new Intent(this,RegisterActivity.class);
+    startActivity(registerIntent);
   }
   /**
    * Shows a helping dialog, so that users understand each field's purpose
@@ -170,7 +187,7 @@ public class LoginActivity extends Activity{
     return str.length()>0;
   }
   /**
-   * Formats the channel, so that no repeated # appear at the beggining.
+   * Formats the channel, so that no repeated # appear at the beginning.
    * Also, if the channel is empty, the default is #libera
    * @param channel the channel string
    * @return the formatted channel string

@@ -3,8 +3,11 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/duart/Documents/uni/android/groupPracticalWork/PocketIRC/application/app/src/main/res/layout/activity_confirmRegistration.xml" value="0.26927083333333335" />
+        <entry key="..\:/Users/duart/Documents/uni/android/groupPracticalWork/PocketIRC/application/app/src/main/res/layout/activity_confirm_registration.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/duart/Documents/uni/android/groupPracticalWork/PocketIRC/application/app/src/main/res/layout/activity_login.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/duart/Documents/uni/android/groupPracticalWork/PocketIRC/application/app/src/main/res/layout/activity_main.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/duart/Documents/uni/android/groupPracticalWork/PocketIRC/application/app/src/main/res/layout/activity_register.xml" value="0.36666666666666664" />
       </map>
     </option>
   </component>

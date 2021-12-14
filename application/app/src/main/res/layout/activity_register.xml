@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RegisterActivity">
+
+    <!--main layout-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:weightSum="100"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <!--layout space-->
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="38"/>
+
+        <!--title layout-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="2"
+            android:layout_weight="20"
+            android:layout_marginStart="32pt"
+            android:layout_marginEnd="40pt"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <!--title-->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="start|center_vertical"
+                android:text="@string/irc_register"
+                android:textSize="28sp"
+                android:fontFamily="sans-serif-black"
+                tools:ignore="NestedWeights" />
+
+            <!--help button-->
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/help"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="start|center_vertical"
+                android:scaleX="0.6"
+                android:scaleY="0.6"
+                android:background="@drawable/button"
+                android:onClick="help"
+                android:textColor="@color/white"
+                app:srcCompat="@android:drawable/ic_menu_help"
+                android:contentDescription="@string/help_symbol"
+                tools:ignore="UsingOnClickInXml" />
+        </LinearLayout>
+
+        <!--username-->
+        <TextView
+            android:id="@+id/usernameLabel"
+            android:labelFor="@id/username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="32pt"
+            android:layout_marginEnd="40pt"
+            android:gravity="start|center_vertical"
+            android:text="@string/nick"
+            android:textSize="15sp"
+            android:fontFamily="sans-serif"/>
+
+        <EditText
+            android:id="@+id/username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32pt"
+            android:layout_marginEnd="40pt"
+            android:layout_weight="5"
+            android:backgroundTint="@color/buttonright"
+            android:fontFamily="sans-serif"
+            android:gravity="start|center_vertical"
+            android:importantForAutofill="no"
+            android:inputType="text"
+            android:textSize="15sp"
+            tools:ignore="DuplicateSpeakableTextCheck" />
+
+        <!--password-->
+        <TextView
+            android:id="@+id/passwordLabel"
+            android:labelFor="@id/password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="32pt"
+            android:layout_marginEnd="40pt"
+            android:gravity="start|center_vertical"
+            android:text="@string/password"
+            android:textSize="15sp"
+            android:fontFamily="sans-serif"/>
+
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32pt"
+            android:layout_marginEnd="40pt"
+            android:layout_weight="5"
+            android:backgroundTint="@color/buttonright"
+            android:fontFamily="sans-serif"
+            android:gravity="start|center_vertical"
+            android:importantForAutofill="no"
+            android:inputType="textPassword"
+            android:textSize="15sp"
+            tools:ignore="DuplicateSpeakableTextCheck"/>
+
+        <!--confirm password-->
+        <TextView
+            android:id="@+id/confirmPasswordLabel"
+            android:labelFor="@id/confirmPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="32pt"
+            android:layout_marginEnd="40pt"
+            android:gravity="start|center_vertical"
+            android:text="@string/confirm_password"
+            android:textSize="15sp"
+            android:fontFamily="sans-serif"/>
+
+        <EditText
+            android:id="@+id/confirmPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32pt"
+            android:layout_marginEnd="40pt"
+            android:layout_weight="5"
+            android:backgroundTint="@color/buttonright"
+            android:fontFamily="sans-serif"
+            android:gravity="start|center_vertical"
+            android:importantForAutofill="no"
+            android:inputType="textPassword"
+            android:textSize="15sp"
+            tools:ignore="DuplicateSpeakableTextCheck"/>
+
+        <!--email-->
+        <TextView
+            android:id="@+id/emailLabel"
+            android:labelFor="@id/email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="32pt"
+            android:layout_marginEnd="40pt"
+            android:gravity="start|center_vertical"
+            android:text="@string/email"
+            android:textSize="15sp"
+            android:fontFamily="sans-serif"/>
+
+        <EditText
+            android:id="@+id/email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32pt"
+            android:layout_marginEnd="40pt"
+            android:layout_weight="5"
+            android:backgroundTint="@color/buttonright"
+            android:fontFamily="sans-serif"
+            android:gravity="start|center_vertical"
+            android:importantForAutofill="no"
+            android:inputType="textEmailAddress"
+            android:textSize="15sp"
+            tools:ignore="DuplicateSpeakableTextCheck" />
+
+        <!--register button-->
+        <Button
+            android:id="@+id/register"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32pt"
+            android:layout_marginEnd="40pt"
+            android:layout_weight="1"
+            android:background="@drawable/button"
+            android:fontFamily="sans-serif-medium"
+            android:gravity="center|center_vertical"
+            android:onClick="register"
+            android:text="@string/register_user"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            tools:ignore="UsingOnClickInXml,DuplicateSpeakableTextCheck" />
+
+        <!--layout space-->
+        <Space
+            android:id="@+id/space"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="16" />
+
+        <!--login layout-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="2"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <!--login button-->
+            <Button
+                android:id="@+id/login"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center|center_vertical"
+                android:text="@string/take_me_to_login"
+                android:textSize="15sp"
+                android:fontFamily="sans-serif-medium"
+                android:textColor="@color/white"
+                android:background="#6c5ce7"
+                android:onClick="login"
+                tools:ignore="ButtonStyle,NestedWeights,UsingOnClickInXml"/>
+
+            <!--command button-->
+            <Button
+                android:id="@+id/command"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center|center_vertical"
+                android:text="@string/i_have_a_command"
+                android:textSize="15sp"
+                android:fontFamily="sans-serif-medium"
+                android:textColor="@color/white"
+                android:background="#6c5ce7"
+                android:onClick="goCommand"
+                tools:ignore="ButtonStyle,NestedWeights,UsingOnClickInXml"/>
+        </LinearLayout>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
