@@ -47,6 +47,10 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
   private NavigationView navView;
   private NavigationView navView2;
 
+  //Create the private chats list and the chats list
+  private ArrayList<String> chatsList;
+  private ArrayList<String> privateChatsList;
+
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -137,6 +141,11 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
     server.login("userHeni", "userheni123", "userHeni", ":garfadaDeSopa");
     server.join("#heni", "");
 
+    //Initialize the chat lists
+    privateChatsList = new ArrayList<>();
+    chatsList = new ArrayList<>();
+    chatsList.add("#heni"); //<--- MUDAR O HARDCODE
+
     // create a blocking queue
     BlockingQueue<String> queue = new LinkedBlockingQueue<>();
 
@@ -175,9 +184,15 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
               MessageIRC m = Parser.parse_message(finalMessage);
               String channel = m.getChannel();
 
+              //If the new chat isn't in the hashmap, add to the hashmap
               if(!channel.equals("")){
                 if(!channels_messageList.containsKey(channel)){
                   channels_messageList.put(channel, new ArrayList<>());
+
+                  //If it's an user add to the privateMessages List
+                  if(channel.charAt(0) != '#' && !privateChatsList.contains(channel)){
+                    privateChatsList.add(channel);
+                  }
                 }
               }
 
@@ -196,6 +211,9 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
 
                 System.out.println("MESSAGE: " + m.toString());
                 channels_messageList.get(channel).add(0, m);
+
+                System.out.println("Private messages: "+ privateChatsList);
+
                 // TODO: Alterar o channel
                 messageAdapter = new MessageRecyclerViewAdapter(getApplicationContext(), channels_messageList.get(channel));
                 messageRecyclerView.setAdapter(messageAdapter);
