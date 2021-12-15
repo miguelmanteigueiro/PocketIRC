@@ -16,6 +16,7 @@ package pt.ubi.di.pdm.teste;/* Commands:
 */
 
 import java.io.PrintWriter;
+import java.util.ArrayList;
 
 /*
 Commands based on: https://en.wikipedia.org/wiki/List_of_Internet_Relay_Chat_commands
@@ -90,7 +91,7 @@ class Commands{
 
   // send a pong
   public void pong(){
-    this.out.println("PONG");
+    this.out.println("PONG" + suffix);
   }
 
   // public unignore(String nickname){
@@ -109,6 +110,10 @@ class Commands{
   // check if string begins with /
   public static boolean checkIfCommand(String s){
     return s.charAt(0) == '/';
+  }
+
+  public void names(String channel){
+    this.out.println("NAMES " + channel + suffix);
   }
 
   public static String replaceCommand(String s){

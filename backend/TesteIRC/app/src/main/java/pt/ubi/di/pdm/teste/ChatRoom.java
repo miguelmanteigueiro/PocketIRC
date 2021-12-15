@@ -67,6 +67,9 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
   String userName;
   public static String chatName;
 
+  // create an arraylist of strings to store the users in a channel
+  public static ArrayList<String> channelUserList = new ArrayList<>();
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     //Initiate the view
@@ -190,13 +193,20 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
             public void run() {
               //Message received from chat
               MessageIRC m = Parser.parse_message(finalMessage);
+              // Send pong command when server send ping (to avoid timeouts)
               if(m.getMessage_type().equals("P")){
                 cmd.pong();
                 return;
               }
 
-              String channel = m.getChannel();
+              // check if code = 353 (same as NAMES), so we can get the list of users in the channel
+              if(m.getCode() == 353){
+                //System.out.println("AQUI" + m);
+                channelUserList.addAll(Arrays.asList(m.getMsg().split(" ")));
+                //System.out.println(Arrays.toString(channelUserList));
+              }
 
+              String channel = m.getChannel();
 
               if(channel.equals("")){
                 channel = chatName;
@@ -218,6 +228,20 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
 
               // Add special message to the list to display User name
               if(m.getMessage_type().equals("C") || m.getMessage_type().equals("UM")){
+
+                String[] tempMessageSplit = m.getMsg().split(" ");
+                for (String word : tempMessageSplit){
+                  if(channelUserList.contains(word)){
+                    tempMessageSplit[Arrays.asList(tempMessageSplit).indexOf(word)] = "<font color='#EE0000'>" + word + "</font>";
+                  }
+                }
+
+                StringBuilder s = new StringBuilder();
+                for (String word : tempMessageSplit){
+                  s.append(word + " ");
+                }
+                m.setMsg(s.toString().trim());
+
                 // Checks if the previous user is different from the current
                 if(channels_messageList.get(channel).size() == 0 ||
                   !channels_messageList.get(channel).get(0).getUser()[0].equals(m.getUser()[0])){
@@ -239,7 +263,9 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
 
               // Check JOIN, PART and QUIT message
               if(Arrays.asList(new String[]{"UJ", "UP", "UQ"}).contains(m.getMessage_type())){
-                m.setUser(new String[]{"", m.getUser()[0], ""}); //🩹
+                // Update list of users in the channel
+                cmd.names(chatName);
+                m.setUser(new String[]{"", m.getUser()[0], ""});
                 // Quit appears on current channel no matter if user is on it
                 if(m.getMessage_type().equals("UQ")) {
                   m.setChannel(channel);

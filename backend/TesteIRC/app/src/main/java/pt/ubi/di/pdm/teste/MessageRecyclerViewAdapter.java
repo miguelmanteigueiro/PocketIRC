@@ -3,6 +3,7 @@ package pt.ubi.di.pdm.teste;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -97,7 +98,7 @@ public class MessageRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
   public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
     MessageIRC ap = mData.get(position);
     if (holder instanceof MessageViewHolder) {
-      ((MessageViewHolder) holder).messageTextView.setText(ap.getMsg());
+      ((MessageViewHolder) holder).messageTextView.setText(Html.fromHtml(ap.getMsg()));
     } else if (holder instanceof UserViewHolder) {
       ((UserViewHolder) holder).userTextView.setText(ap.getUser()[0]);
       //Alterar cor de texto de utilizador aqui
