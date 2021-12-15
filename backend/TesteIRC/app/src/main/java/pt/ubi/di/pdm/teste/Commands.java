@@ -87,6 +87,12 @@ class Commands{
       this.out.println("TOPIC " + channel + " " + topic + suffix);
     }
   }
+
+  // send a pong
+  public void pong(){
+    this.out.println("PONG");
+  }
+
   // public unignore(String nickname){
   //   this.out.println()
   // }

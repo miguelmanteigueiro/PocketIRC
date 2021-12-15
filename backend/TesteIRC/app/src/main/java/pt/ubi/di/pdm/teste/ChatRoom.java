@@ -190,7 +190,13 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
             public void run() {
               //Message received from chat
               MessageIRC m = Parser.parse_message(finalMessage);
+              if(m.getMessage_type().equals("P")){
+                cmd.pong();
+                return;
+              }
+
               String channel = m.getChannel();
+
 
               if(channel.equals("")){
                 channel = chatName;
