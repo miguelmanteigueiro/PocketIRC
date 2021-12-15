@@ -102,30 +102,60 @@ public class Parser{
     String[] user = new String[3];
     String msg = "";
     String action = "";
+    String message_type = "";
     int code = -1;
-    boolean is_user = true;
 
+    // Check if it is a server message
     if(isServerMessage(arr)){
     	server = getServer(arr);
-    	is_user = false;
+    	// Checks if message is from NickServ or just Server
+    	if(arr[0].split(" ")[0].contains("NickServ")){
+    	  message_type = "NS";
+      }
+    	else{
+        message_type = "S";
+      }
     }
     else{
+      // Get user names
       user[0] = strippedNickname(getNickname(arr));
       user[1] = getUser(arr);
       user[2] = getHostname(arr);
+
+      // Get action
       action = getAction(arr);
+
+      // Checks if action is NOTICE or PRIVMSG
       if(action.equals("NOTICE") || action.equals("PRIVMSG")){
         recipient = getRecipient(arr);
+        // If recipient doesn't start with '#' so it is a normal user message
+        // If not it is a channel message
         if(recipient.charAt(0) != '#'){
           channel = user[0];
+          message_type = "UM";
+        }
+        else{
+          channel = getChannel(arr);
+          message_type = "C";
         }
       }
+      // Check if message action is a JOIN, PART or QUIT
+      if(action.equals("JOIN")){
+        message_type = "UJ";
+      }
+      if(action.equals("PART")){
+        message_type = "UP";
+      }
+      if(action.equals("QUIT")){
+        message_type = "UQ";
+      }
     }
+    // Get code
     code = getIRCCode(arr);
-    if(channel.equals("")){
-      channel = getChannel(arr);
-    }
+    // Get msg content
     msg = getMessage(arr);
+    // Get the channel
+    channel = getChannel(arr);
 
     MessageIRC mesg = new MessageIRC();
     mesg.setServer(server);
@@ -135,12 +165,19 @@ public class Parser{
     mesg.setCode(code);
     mesg.setChannel(channel);
     mesg.setMsg(msg);
-    mesg.setIs_user(is_user);
+    mesg.setMessage_type(message_type);
+
     System.out.println(mesg.toString());
     return mesg;
   }
 
   public static MessageIRC parse_message(String message){
+    // Check if message is a Ping
+    if(message.split(" ")[0].equals("PING")){
+      MessageIRC m = new MessageIRC();
+      m.setMessage_type("P");
+      return m;
+    }
     message = replaceIPV6(message);
     String[] arr = tokenize(message);
     return parser(arr);

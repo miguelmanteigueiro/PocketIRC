@@ -11,8 +11,14 @@ public class MessageIRC {
   String msg;
   String action;
   String hour;
+  // The message type can be:
+  // -Server Message (S)
+  // -Channel Message (C)
+  // -User Message (Message, JOIN, QUIT, PART) (UM) (UJ) (UQ) (UP)
+  // -NickServ Message (Appears on the chat and it is a NOTICE) (NS)
+  // -Ping (P)
+  String message_type;
   int code;
-  boolean is_user;
 
   public MessageIRC(){
     String server = "";
@@ -22,6 +28,7 @@ public class MessageIRC {
     String type = "";
     String msg = "";
     String action = "";
+    String message_type = "";
     int code = -1;
   }
 
@@ -50,9 +57,11 @@ public class MessageIRC {
   public String[] getUser() {
     return user;
   }
-  public boolean getIs_user() { return is_user; }
   public String getHour() {
     return hour;
+  }
+  public String getMessage_type() {
+    return message_type;
   }
 
   public void setAction(String action) {
@@ -79,24 +88,26 @@ public class MessageIRC {
   public void setUser(String[] user) {
     this.user = user;
   }
-  public void setIs_user(boolean is_user) { this.is_user = is_user; }
   public void setHour(String hour) {
     this.hour = hour;
+  }
+  public void setMessage_type(String message_type) {
+    this.message_type = message_type;
   }
 
   @Override
   public String toString() {
     return "MessageIRC{" +
-            "server='" + server + '\'' +
-            ", channel='" + channel + '\'' +
-            ", recipient='" + recipient + '\'' +
-            ", user=" + Arrays.toString(user) +
-            ", type='" + type + '\'' +
-            ", msg='" + msg + '\'' +
-            ", action='" + action + '\'' +
-            ", hour='" + hour + '\'' +
-            ", code=" + code +
-            ", is_user=" + is_user +
-            '}';
+      "server='" + server + '\'' +
+      ", channel='" + channel + '\'' +
+      ", recipient='" + recipient + '\'' +
+      ", user=" + Arrays.toString(user) +
+      ", type='" + type + '\'' +
+      ", msg='" + msg + '\'' +
+      ", action='" + action + '\'' +
+      ", hour='" + hour + '\'' +
+      ", message_type='" + message_type + '\'' +
+      ", code=" + code +
+      '}';
   }
 }

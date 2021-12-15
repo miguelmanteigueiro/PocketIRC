@@ -15,6 +15,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.res.TypedArrayUtils;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,9 +23,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Calendar;
+import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -203,21 +206,23 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
               MessageIRC m = Parser.parse_message(finalMessage);
               String channel = m.getChannel();
 
-              //If the new chat isn't in the hashmap, add to the hashmap
-              if(!channel.equals("")){
-                if(!channels_messageList.containsKey(channel)){
-                  channels_messageList.put(channel, new ArrayList<>());
+              if(channel.equals("")){
+                channel = chatName;
+              }
 
-                  //If it's an user add to the privateMessages List
-                  if(channel.charAt(0) != '#' && !privateChatsList.contains(channel)){
-                    privateChatsList.add(channel);
-                  }
+              // Check if is a user message
+              if(m.getMessage_type().equals("UM")){
+                // Add user message to privateChatsList
+                if(!privateChatsList.contains(channel)){
+                  privateChatsList.add(channel);
                 }
               }
 
-              if(m.getIs_user()){
-                //Checks if the previous message is the user's or there are none
-                if(m.getAction().equals("PRIVMSG") && (channels_messageList.get(channel).size() == 0 || !channels_messageList.get(channel).get(0).getAction().equals("PRIVMSG") || !channels_messageList.get(channel).get(0).getUser()[0].equals(m.getUser()[0]))) {
+              // Add special message to the list to display User name
+              if(m.getMessage_type().equals("C") || m.getMessage_type().equals("UM")){
+                // Checks if the previous user is different from the current
+                if(channels_messageList.get(channel).size() == 0 ||
+                  !channels_messageList.get(channel).get(0).getUser()[0].equals(m.getUser()[0])){
                   Calendar cal = Calendar.getInstance();
                   //This add is the username that appears on the screen
                   String hour = String.valueOf(cal.get(Calendar.HOUR_OF_DAY));
@@ -230,24 +235,24 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
                   // if don't create a new list and then append the message to it
                   channels_messageList.get(channel).add(0, m);
                 }
-
-                System.out.println("MESSAGE: " + m.toString());
+                // Add message to the list
                 channels_messageList.get(channel).add(0, m);
-
-                System.out.println("Private messages: "+ privateChatsList);
-
-                // TODO: Alterar o channel
-                messageAdapter = new MessageRecyclerViewAdapter(getApplicationContext(), channels_messageList.get(channel));
-                messageRecyclerView.setAdapter(messageAdapter);
-                messageAdapter.setClickListener(ChatRoom.this);
-
               }
-              else{
-                if(!channels_messageList.containsKey("NickServer")){
-                  channels_messageList.put("NickServer", new ArrayList<>());
+
+              // Check JOIN, PART and QUIT message
+              if(Arrays.asList(new String[]{"UJ", "UP", "UQ"}).contains(m.getMessage_type())){
+                m.setUser(new String[]{"", m.getUser()[0], ""}); //🩹
+                // Quit appears on current channel no matter if user is on it
+                if(m.getMessage_type().equals("UQ")) {
+                  m.setChannel(channel);
                 }
-                channels_messageList.get("NickServer").add(m);
+                channels_messageList.get(channel).add(0, m);
               }
+
+              // Update message Adapter
+              messageAdapter = new MessageRecyclerViewAdapter(getApplicationContext(), channels_messageList.get(channel));
+              messageRecyclerView.setAdapter(messageAdapter);
+              messageAdapter.setClickListener(ChatRoom.this);
             }
           });
         }
@@ -279,13 +284,12 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
 
           //Update message user
           m.setUser(new String[]{userName, userName, userName});
-          m.setIs_user(true);
+          m.setMessage_type("C");
           m.setAction("PRIVMSG");
           m.setChannel(chatName);
           m.setRecipient(chatName);
 
 
-          //🩹🩹🩹🩹🩹🩹
           if(!channels_messageList.get(chatName).isEmpty()) {
             //Checks if the previous message is the user's or there are none
             //channels_messageList.get(chatName).size() == 0 ||
@@ -297,7 +301,15 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
             channels_messageList.get(chatName).add(0, m);
 
             //Send message to server
-            cmd.msg(chatName, m.getMsg());
+            String temp_message = m.getMsg();
+            if(Commands.checkIfCommand(temp_message)){
+              // Parse the command message
+              temp_message = Commands.replaceCommand(temp_message);
+              server.send_message(temp_message);
+            }
+            else{
+              cmd.msg(chatName, m.getMsg());
+            }
 
             //Update recyclerView
             messageAdapter = new MessageRecyclerViewAdapter(this, channels_messageList.get(chatName));
@@ -312,45 +324,6 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
         }
       }
     );
-
-    //user b
-    /*userButton.setOnClickListener(
-      oView -> {
-        String aux = sendMessage.getText().toString();
-
-        if(!isBlank(aux) && !aux.isEmpty())
-        {
-          //Updates message list
-          MessageIRC m = new MessageIRC();
-          aux = aux.trim();
-          m.setMsg(aux);
-          m.setUser(new String[]{"Barrico", "b", "b"});
-
-          Calendar now = Calendar.getInstance();
-          String hour = String.valueOf(now.get(Calendar.HOUR_OF_DAY));
-          int auxMin = now.get(Calendar.MINUTE);
-          String minute = (auxMin < 10)? "0"+String.valueOf(auxMin) : String.valueOf(auxMin);
-          m.setHour(hour+":"+minute);
-
-          if(messageList.size() == 0 || !messageList.get(0).getUser()[0].equals(m.getUser()[0]))
-          {
-            messageList.add(0,m);
-          }
-
-          messageList.add(0,m);
-
-          //Update recyclerView
-          //messageAdapter = new MessageRecyclerViewAdapter(this, userList,1);
-          messageAdapter = new MessageRecyclerViewAdapter(this, messageList);
-          messageRecyclerView.setAdapter(messageAdapter);
-          messageAdapter.setClickListener(this);
-
-          //Empty chat text
-          sendMessage.setText("");
-        }
-      }
-    );*/
-
 
   }
 
