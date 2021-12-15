@@ -122,6 +122,9 @@ public class Parser{
       user[1] = getUser(arr);
       user[2] = getHostname(arr);
 
+      // Get the channel
+      channel = getChannel(arr);
+
       // Get action
       action = getAction(arr);
 
@@ -154,8 +157,7 @@ public class Parser{
     code = getIRCCode(arr);
     // Get msg content
     msg = getMessage(arr);
-    // Get the channel
-    channel = getChannel(arr);
+
 
     MessageIRC mesg = new MessageIRC();
     mesg.setServer(server);

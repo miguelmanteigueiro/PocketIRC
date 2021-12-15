@@ -119,22 +119,33 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
-    <com.google.android.material.navigation.NavigationView
-        android:layout_width="wrap_content"
+    <!-- Left drawer -->
+    <LinearLayout
+        android:id="@+id/leftDrawer"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/nav_view"
         android:layout_gravity="start"
-        app:headerLayout="@layout/navigation_header"
-        app:menu="@menu/navigation_menu">
-    </com.google.android.material.navigation.NavigationView>
+        android:background="@color/white"
+        android:minWidth="250dp"
+        android:orientation="vertical">
 
-    <com.google.android.material.navigation.NavigationView
+        <include layout="@layout/left_drawer"/>
+
+    </LinearLayout>
+
+    <!-- Right Drawer -->
+    <LinearLayout
+        android:id="@+id/rightDrawer"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:id="@+id/nav_view2"
         android:layout_gravity="end"
-        app:headerLayout="@layout/navigation_header2"
-        app:menu="@menu/navigatipn_menu2">
-    </com.google.android.material.navigation.NavigationView>
+        android:minWidth="250dp"
+        android:background="@color/white"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Ciganito"/>
+    </LinearLayout>
 
 </androidx.drawerlayout.widget.DrawerLayout>

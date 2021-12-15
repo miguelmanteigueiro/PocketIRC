@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,13 +44,17 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
   EditText sendMessage;
   TextView roomName;
   MessageRecyclerViewAdapter messageAdapter;
+  ChannelsRecyclerViewAdapter channelsAdapter;
+  ChannelsRecyclerViewAdapter privMessagesAdapter;
   RecyclerView messageRecyclerView;
+  RecyclerView channelsRecyclerView;
+  RecyclerView privMessagesRecyclerView;
   Toolbar toolbar;
 
   //Instantiate the drawers
   private DrawerLayout drawerLayout;
-  private NavigationView navView;
-  private NavigationView navView2;
+  private LinearLayout leftDrawer;
+  private LinearLayout rightDrawer;
 
   //Create the private chats list and the chats list
   private ArrayList<String> chatsList;
@@ -69,8 +74,8 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
 
     //=======================================Drawers===============================================
     //Drawer Variables
-    navView = (NavigationView) findViewById(R.id.nav_view);
-    navView2 = (NavigationView) findViewById(R.id.nav_view2);
+    leftDrawer = (LinearLayout) findViewById(R.id.leftDrawer);
+    rightDrawer = (LinearLayout) findViewById(R.id.rightDrawer);
     toolbar = (Toolbar) findViewById(R.id.chat_header);
 
     drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
@@ -78,49 +83,14 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
     Toolbar toolbar = (Toolbar) findViewById(R.id.chat_header);
     setSupportActionBar(toolbar);
 
-    Button burguer1 = (Button) findViewById(R.id.switch1);
-    Button burguer2 = (Button) findViewById(R.id.switch2);
+    Button leftHamburger = (Button) findViewById(R.id.switch1);
+    Button rightHamburger = (Button) findViewById(R.id.switch2);
 
-    burguer1.setOnClickListener(v -> {
-      drawerLayout.openDrawer(navView);
+    leftHamburger.setOnClickListener(v -> {
+      drawerLayout.openDrawer(leftDrawer);
     });
-    burguer2.setOnClickListener(v -> {
-      drawerLayout.openDrawer(navView2);
-    });
-
-    navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-      @Override
-      public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        int id = item.getItemId();
-
-        if(id == R.id.channel) {
-          Toast.makeText(ChatRoom.this, "Channels", Toast.LENGTH_SHORT).show();
-        }
-        else if(id == R.id.privMassages) {
-          Toast.makeText(ChatRoom.this, "Private Messages", Toast.LENGTH_SHORT).show();
-        }
-        else if(id == R.id.random) {
-          Toast.makeText(ChatRoom.this, "Random", Toast.LENGTH_SHORT).show();
-        }
-        return true;
-      }
-    });
-    navView2.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-      @Override
-      public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        int id = item.getItemId();
-
-        if(id == R.id.channel2) {
-          Toast.makeText(ChatRoom.this, "Channels", Toast.LENGTH_SHORT).show();
-        }
-        else if(id == R.id.privMassages2) {
-          Toast.makeText(ChatRoom.this, "Private Messages", Toast.LENGTH_SHORT).show();
-        }
-        else if(id == R.id.random2) {
-          Toast.makeText(ChatRoom.this, "Random", Toast.LENGTH_SHORT).show();
-        }
-        return true;
-      }
+    rightHamburger.setOnClickListener(v -> {
+      drawerLayout.openDrawer(rightDrawer);
     });
 
     //========================================================================================
@@ -129,11 +99,12 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
     //Initiate the widgets
     sendButton = (ImageButton)findViewById(R.id.chat_sendButton);
     sendMessage = (EditText)findViewById(R.id.chat_sendMessageBox);
+    channelsRecyclerView = (RecyclerView)findViewById(R.id.drawer_channels_list);
+    privMessagesRecyclerView = (RecyclerView) findViewById(R.id.drawer_messages_list);
     messageRecyclerView = (RecyclerView) findViewById(R.id.chat_messageContainer);
 
     //Setup the message recycler view
     LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true);
-
     messageRecyclerView.setLayoutManager(linearLayoutManager);
     messageAdapter = new MessageRecyclerViewAdapter(this, messageList);
     messageRecyclerView.setAdapter(messageAdapter);
@@ -161,6 +132,20 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
     privateChatsList = new ArrayList<>();
     chatsList = new ArrayList<>();
     chatsList.add(chatName);
+
+    //Setup the channels lists recycler views
+    LinearLayoutManager linearLayoutManagerChannels = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true);
+    LinearLayoutManager linearLayoutManagerPrivMessages = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true);
+
+    //Channels list adapter
+    channelsRecyclerView.setLayoutManager(linearLayoutManagerChannels);
+    channelsAdapter = new ChannelsRecyclerViewAdapter(this, chatsList);
+    channelsRecyclerView.setAdapter(channelsAdapter);
+
+    //Private channels list adapter
+    privMessagesRecyclerView.setLayoutManager(linearLayoutManagerPrivMessages);
+    privMessagesAdapter = new ChannelsRecyclerViewAdapter(this, privateChatsList);
+    privMessagesRecyclerView.setAdapter(privMessagesAdapter);
 
     //Add to the hashmap
     channels_messageList.put(chatName,new ArrayList<>());
@@ -210,11 +195,17 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
                 channel = chatName;
               }
 
+              if(!channels_messageList.containsKey(channel)){
+                channels_messageList.put(channel,new ArrayList<>());
+              }
+
               // Check if is a user message
               if(m.getMessage_type().equals("UM")){
                 // Add user message to privateChatsList
                 if(!privateChatsList.contains(channel)){
                   privateChatsList.add(channel);
+                  privMessagesAdapter = new ChannelsRecyclerViewAdapter(ChatRoom.this, privateChatsList);
+                  privMessagesRecyclerView.setAdapter(privMessagesAdapter);
                 }
               }
 
