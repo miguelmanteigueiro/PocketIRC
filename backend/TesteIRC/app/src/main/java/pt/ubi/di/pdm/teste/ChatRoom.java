@@ -227,18 +227,8 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
               // Add special message to the list to display User name
               if(m.getMessage_type().equals("C") || m.getMessage_type().equals("UM") || m.getMessage_type().equals("NS")){
 
-                String[] tempMessageSplit = m.getMsg().split(" ");
-                for (String word : tempMessageSplit){
-                  if(channelUserList.contains(word)){
-                    tempMessageSplit[Arrays.asList(tempMessageSplit).indexOf(word)] = "<font color='#EE0000'>" + word + "</font>";
-                  }
-                }
-
-                StringBuilder s = new StringBuilder();
-                for (String word : tempMessageSplit){
-                  s.append(word + " ");
-                }
-                m.setMsg(s.toString().trim());
+                // mention user
+                m.setMsg(mention_user(m));
 
                 // Checks if the previous user is different from the current
                 if(channels_messageList.get(channel).size() == 0 ||
@@ -333,6 +323,8 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
               server.send_message(temp_message);
             }
             else{
+              // mention user
+              m.setMsg(mention_user(m));
               cmd.msg(chatName, m.getMsg());
             }
 
@@ -350,6 +342,22 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
       }
     );
 
+  }
+
+  public static String mention_user(MessageIRC m){
+    String[] tempMessageSplit = m.getMsg().split(" ");
+    for (String word : tempMessageSplit){
+      if(channelUserList.contains(word)){
+        tempMessageSplit[Arrays.asList(tempMessageSplit).indexOf(word)] = "<font color='#EE0000'>" + word + "</font>";
+      }
+    }
+
+    StringBuilder s = new StringBuilder();
+    for (String word : tempMessageSplit){
+      s.append(word + " ");
+    }
+
+    return s.toString().trim();
   }
 
   //Verifies if a string is made entirely of blank spaces
