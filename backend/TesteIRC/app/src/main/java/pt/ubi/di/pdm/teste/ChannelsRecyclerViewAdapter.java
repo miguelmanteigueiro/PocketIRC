@@ -10,9 +10,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-public class ChannelsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+import pt.ubi.di.pdm.teste.ChatRoom;
+
+public class ChannelsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements MessageRecyclerViewAdapter.ItemClickListener{
     private ArrayList<String> mData;
     private LayoutInflater mInflater;
+    private MessageRecyclerViewAdapter messageAdapter;
 
     // data is passed into the constructor
     ChannelsRecyclerViewAdapter(Context context, ArrayList<String> data) {
@@ -36,6 +39,14 @@ public class ChannelsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
             @Override
             public void onClick(View v) {
                 System.out.println(mData.get(holder.getAdapterPosition()));
+
+                //Update the current chat
+                ChatRoom.chatName = mData.get(holder.getAdapterPosition());
+
+                // Update message Adapter
+                messageAdapter = new MessageRecyclerViewAdapter(v.getContext(), ChatRoom.channels_messageList.get(ChatRoom.chatName));
+                ChatRoom.messageRecyclerView.setAdapter(messageAdapter);
+                messageAdapter.setClickListener(ChannelsRecyclerViewAdapter.this);
             }
         });
     }
@@ -44,6 +55,11 @@ public class ChannelsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
     @Override
     public int getItemCount() {
         return mData.size();
+    }
+
+    @Override
+    public void onItemClick(View view, int position) {
+        System.out.println("Pixotas");
     }
 
 

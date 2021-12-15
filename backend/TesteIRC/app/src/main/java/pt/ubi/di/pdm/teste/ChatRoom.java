@@ -1,6 +1,7 @@
 package pt.ubi.di.pdm.teste;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -43,10 +44,10 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
   ImageButton userButton;
   EditText sendMessage;
   TextView roomName;
-  MessageRecyclerViewAdapter messageAdapter;
+  public static MessageRecyclerViewAdapter messageAdapter;
   ChannelsRecyclerViewAdapter channelsAdapter;
   ChannelsRecyclerViewAdapter privMessagesAdapter;
-  RecyclerView messageRecyclerView;
+  public static RecyclerView messageRecyclerView;
   RecyclerView channelsRecyclerView;
   RecyclerView privMessagesRecyclerView;
   Toolbar toolbar;
@@ -59,12 +60,12 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
   //Create the private chats list and the chats list
   private ArrayList<String> chatsList;
   private ArrayList<String> privateChatsList;
+  public static HashMap<String, ArrayList<MessageIRC>> channels_messageList;
 
   //Chat variables
   Commands cmd;
   String userName;
-  String chatName;
-
+  public static String chatName;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -103,15 +104,8 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
     privMessagesRecyclerView = (RecyclerView) findViewById(R.id.drawer_messages_list);
     messageRecyclerView = (RecyclerView) findViewById(R.id.chat_messageContainer);
 
-    //Setup the message recycler view
-    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true);
-    messageRecyclerView.setLayoutManager(linearLayoutManager);
-    messageAdapter = new MessageRecyclerViewAdapter(this, messageList);
-    messageRecyclerView.setAdapter(messageAdapter);
-    messageAdapter.setClickListener(this);
-
     // HashMap that handles the messages by channels
-    HashMap<String, ArrayList<MessageIRC>> channels_messageList = new HashMap<String, ArrayList<MessageIRC>>();
+    channels_messageList = new HashMap<String, ArrayList<MessageIRC>>();
 
     /* Server connection and threads */
     StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -149,6 +143,13 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
 
     //Add to the hashmap
     channels_messageList.put(chatName,new ArrayList<>());
+
+    //Setup the message recycler view
+    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true);
+    messageRecyclerView.setLayoutManager(linearLayoutManager);
+    messageAdapter = new MessageRecyclerViewAdapter(this, channels_messageList.get(chatName));
+    messageRecyclerView.setAdapter(messageAdapter);
+    messageAdapter.setClickListener(this);
 
     // create a blocking queue
     BlockingQueue<String> queue = new LinkedBlockingQueue<>();
@@ -240,10 +241,14 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
                 channels_messageList.get(channel).add(0, m);
               }
 
-              // Update message Adapter
-              messageAdapter = new MessageRecyclerViewAdapter(getApplicationContext(), channels_messageList.get(channel));
-              messageRecyclerView.setAdapter(messageAdapter);
-              messageAdapter.setClickListener(ChatRoom.this);
+              //Updates the current message list
+              if(channel.equals(chatName)){
+                // Update message Adapter
+                messageAdapter = new MessageRecyclerViewAdapter(getApplicationContext(), channels_messageList.get(channel));
+                messageRecyclerView.setAdapter(messageAdapter);
+                messageAdapter.setClickListener(ChatRoom.this);
+              }
+
             }
           });
         }
@@ -252,7 +257,6 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
 
     new Thread(producer).start();
     new Thread(consumer).start();
-
 
     //Send button
     sendButton.setOnClickListener(
@@ -338,6 +342,8 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
     MessageIRC m = messageAdapter.getItem(position);
     System.out.println(m.getMsg());
   }
-
-
+  /*// Update message Adapter
+    messageAdapter = new MessageRecyclerViewAdapter(getApplicationContext(), channels_messageList.get(channel));
+    messageRecyclerView.setAdapter(messageAdapter);
+    messageAdapter.setClickListener(ChatRoom.this);*/
 }
