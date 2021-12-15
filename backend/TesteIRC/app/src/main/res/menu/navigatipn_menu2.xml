@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/channel2"
+        android:title="Channel"
+        android:icon="@drawable/ic_baseline_short_text_24">
+    </item>
+
+    <item
+        android:id="@+id/privMassages2"
+        android:title="Private Messages"
+        android:icon="@drawable/ic_baseline_message_24">
+    </item>
+    <item
+        android:id="@+id/random2"
+        android:title="Random"
+        android:icon="@drawable/ic_android_black_24dp">
+    </item>
+</menu>

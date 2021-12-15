@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_marginHorizontal="10dp"
+    android:layout_marginTop="5dp"
+    android:paddingHorizontal="10dp">
+
+    <TextView
+        android:id="@+id/chat_message"
+        android:layout_width="wrap_content"
+        android:text="Message placeholder"
+        android:textColor="@color/black"
+        android:layout_height="match_parent"
+        android:singleLine="false"
+        android:textSize="18sp"/>
+
+</LinearLayout>

@@ -1,8 +1,8 @@
 public class Message {
-  String server;
-  String channel;
-  String recipient;
-  String[] user;
+  String server; // Server name
+  String channel; // Channel name
+  String recipient; // Who receives the message
+  String[] user; //
   String type;
   String msg;
   String action;

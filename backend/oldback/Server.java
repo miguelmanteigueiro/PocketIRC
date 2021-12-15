@@ -68,11 +68,4 @@ public class Server{
       this.out.println(data);
     }
   }
-
-  public void send_data2(String s) throws Exception{
-    //BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
-    while(true){
-      this.out.println(s);
-    }
-  }
 }

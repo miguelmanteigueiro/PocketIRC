@@ -1,4 +1,5 @@
 import java.util.*;
+import java.io.*;
 
 import javax.sound.sampled.SourceDataLine;
 
@@ -52,6 +53,7 @@ public class Parser{
     try{
       int code;
       code = Integer.parseInt(arr[0].split(" ")[1]);
+      return code;
     }
     catch(NumberFormatException e){}
     return -1;
@@ -75,7 +77,7 @@ public class Parser{
     return "";
   }
 
-  public static void parser(String[] arr){
+  public static Message parser(String[] arr){
 		String server = "";
 		String channel = "";
 		String recipient = "";
@@ -95,16 +97,18 @@ public class Parser{
       if(action.equals("NOTICE") || action.equals("PRIVMSG")){
         recipient = getRecipient(arr);
       }
-      code = getIRCCode(arr);
-      channel = getChannel(arr);
-      msg = getMessage(arr);
-      if(action.equals("PART")){
-        msg = channel;
-      }
-      if(action.equals("JOIN")){
-        channel = getMessage(arr);
-      }
     }
+    code = getIRCCode(arr);
+    channel = getChannel(arr);
+    msg = getMessage(arr);
+    /*
+    if(action.equals("PART")){
+      msg = channel;
+    }
+    if(action.equals("JOIN")){
+      channel = getMessage(arr);
+    }
+    */
 
     Message mesg = new Message();
     mesg.setServer(server);
@@ -115,14 +119,25 @@ public class Parser{
     mesg.setChannel(channel);
     mesg.setMsg(msg);
 
-    System.out.println(mesg);
+    //System.out.println(mesg.toString());
+    return mesg;
   }
 
   public static void main(String[] args){
-    String s = ":strontium.libera.chat 376 userHeni :End of /MOTD command." ; //problemas para o eu do futuro
-    //String s = ":NickServ!NickServ@services.libera.chat NOTICE userHeni :This nickname is registered. Please choose a different nickname, or identify via /msg NickServ IDENTIFY userHeni <password>";
-    String[] arr = tokenize(s);
-    //System.out.println(Arrays.toString(arr));
-		parser(arr);
+
+   	try {
+      File myObj = new File("sample");
+      Scanner myReader = new Scanner(myObj);
+      while (myReader.hasNextLine()) {
+        String data = myReader.nextLine();
+        String[] arr = tokenize(data);
+        System.out.println(parser(arr).toString());
+        System.out.println();
+      }
+      myReader.close();
+    } catch (FileNotFoundException e) {
+      System.out.println("An error occurred.");
+      e.printStackTrace();
+    }  
   }
 }
