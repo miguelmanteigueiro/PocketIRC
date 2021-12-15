@@ -48,6 +48,7 @@ public class MessageRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     switch (mData.get(position).getMessage_type()){
       // Check if previous user is equals to the current
       case "C"  :
+      case "NS" :
       case "UM" : if (mData.get(position).getUser()[0].equals(mData.get(position + 1).getUser()[0])){
                     return R.layout.message_recycler_view_row;
                   } else {

@@ -1,10 +1,9 @@
-package pt.ubi.di.pdm.teste;
 import java.util.*;
 import java.io.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Parser{
+public class Parser_v2{
   
   public static String[] tokenize(String data){
     String[] arr = data.split(":");
@@ -111,12 +110,9 @@ public class Parser{
     	// Checks if message is from NickServ or just Server
     	if(arr[0].split(" ")[0].contains("NickServ")){
     	  message_type = "NS";
-    	  channel = "NickServ";
-        user[0] = "NickServ";
-        user[1] = "NickServ";
-        user[2] = "NickServ";
       }
     	else{
+        System.out.println(Arrays.toString(arr));
         message_type = "S";
       }
     }
@@ -125,9 +121,6 @@ public class Parser{
       user[0] = strippedNickname(getNickname(arr));
       user[1] = getUser(arr);
       user[2] = getHostname(arr);
-
-      // Get the channel
-      channel = getChannel(arr);
 
       // Get action
       action = getAction(arr);
@@ -149,19 +142,21 @@ public class Parser{
       // Check if message action is a JOIN, PART or QUIT
       if(action.equals("JOIN")){
         message_type = "UJ";
+        channel = getChannel(arr);
       }
       if(action.equals("PART")){
         message_type = "UP";
+        channel = getChannel(arr);
       }
       if(action.equals("QUIT")){
         message_type = "UQ";
+        channel = getChannel(arr);
       }
     }
     // Get code
     code = getIRCCode(arr);
     // Get msg content
     msg = getMessage(arr);
-
 
     MessageIRC mesg = new MessageIRC();
     mesg.setServer(server);
@@ -173,7 +168,6 @@ public class Parser{
     mesg.setMsg(msg);
     mesg.setMessage_type(message_type);
 
-    System.out.println(mesg.toString());
     return mesg;
   }
 
@@ -186,6 +180,23 @@ public class Parser{
     }
     message = replaceIPV6(message);
     String[] arr = tokenize(message);
+
     return parser(arr);
+  }
+
+  public static void main(String[] args){
+   	try {
+      File myObj = new File("sample2");
+      Scanner myReader = new Scanner(myObj);
+      while (myReader.hasNextLine()) {
+        String data = myReader.nextLine();
+        System.out.println(parse_message(data).toString());
+        System.out.println();
+      }
+      myReader.close();
+    } catch (FileNotFoundException e) {
+      System.out.println("An error occurred.");
+      e.printStackTrace();
+    }  
   }
 }

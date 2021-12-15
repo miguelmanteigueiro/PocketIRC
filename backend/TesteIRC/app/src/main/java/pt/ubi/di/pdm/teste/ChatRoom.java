@@ -201,9 +201,7 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
 
               // check if code = 353 (same as NAMES), so we can get the list of users in the channel
               if(m.getCode() == 353){
-                //System.out.println("AQUI" + m);
                 channelUserList.addAll(Arrays.asList(m.getMsg().split(" ")));
-                //System.out.println(Arrays.toString(channelUserList));
               }
 
               String channel = m.getChannel();
@@ -217,7 +215,7 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
               }
 
               // Check if is a user message
-              if(m.getMessage_type().equals("UM")){
+              if(m.getMessage_type().equals("UM") || m.getMessage_type().equals("NS")){
                 // Add user message to privateChatsList
                 if(!privateChatsList.contains(channel)){
                   privateChatsList.add(channel);
@@ -227,7 +225,7 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
               }
 
               // Add special message to the list to display User name
-              if(m.getMessage_type().equals("C") || m.getMessage_type().equals("UM")){
+              if(m.getMessage_type().equals("C") || m.getMessage_type().equals("UM") || m.getMessage_type().equals("NS")){
 
                 String[] tempMessageSplit = m.getMsg().split(" ");
                 for (String word : tempMessageSplit){
