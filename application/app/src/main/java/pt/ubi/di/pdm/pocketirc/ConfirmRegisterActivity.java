@@ -3,8 +3,11 @@ package pt.ubi.di.pdm.pocketirc;
 //imports
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -17,6 +20,10 @@ public class ConfirmRegisterActivity extends Activity{
   //declare xml attributes
   TextView commandLabel;
   EditText command;
+  //server
+  Server server;
+  //username
+  String username;
 
   //== methods ==
   /**
@@ -36,12 +43,27 @@ public class ConfirmRegisterActivity extends Activity{
     command.setText("");
     //get intent
     Intent i=getIntent();
+    if(i.getStringExtra("username")==null){
+      username="";
+      for(int j=0;j<20;j++){
+        int rand=(int)(Math.random()*75);
+        username+=(char)(rand+48);
+      }
+    }
+    else{
+      username=i.getStringExtra("username");
+    }
     if(i.getStringExtra("Email").equals("")){
       commandLabel.setText("Please type the command sent to your email");
     }
     else{
       commandLabel.setText("Please type the command sent to "+i.getStringExtra("Email"));
     }
+    //server
+    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+    StrictMode.setThreadPolicy(policy);
+    server = new Server("irc.libera.chat",6667);
+    System.out.println(username);
   }
   /**
    * Send the command to the server to complete user registration, sending
@@ -52,12 +74,38 @@ public class ConfirmRegisterActivity extends Activity{
   public void confirmRegistration(View v){
     //transform username and passwords into strings
     String commandString=String.valueOf(command.getText());
+    String parsedCommand=parseCommand(commandString);
     //reset tint to default state
     command.setBackgroundTintList(this.getResources().getColorStateList(R.color.buttonright));
     //confirm registration
-    //confirm(commandString); //uncomment
-    //go to login activity
-    Intent loginIntent=new Intent(this,LoginActivity.class);
-    startActivity(loginIntent);
+    if(parsedCommand.equals("LOLNOOB")){
+      //show error dialog
+      command.setBackgroundTintList(this.getResources().getColorStateList(R.color.buttonwrong));
+      AlertDialog.Builder builder=new AlertDialog.Builder(this);
+      builder.setTitle("Registration Error").setMessage("There was an error in the registration. The command is probably not well written!").setPositiveButton("I'm sorry :(",(dialog,which)->dialog.dismiss());
+      Dialog dialog=builder.create();
+      dialog.show();
+    }
+    else{
+      //confirm registration
+      server.login(username,"",username, ":"+username);
+      server.send_message(parseCommand(commandString));
+      //go to login activity
+      Intent loginIntent=new Intent(this,LoginActivity.class);
+      startActivity(loginIntent);
+    }
+  }
+  /**
+   * Parses the command to the correct output
+   * @param command the command to parse
+   * @return the parsed command
+   */
+  private String parseCommand(String command){
+    try{
+      return "nickserv verify register"+command.split(" ")[4]+command.split(" ")[5]+" \r\n";
+    }
+    catch(Exception err){
+      return "LOLNOOB";
+    }
   }
 }
