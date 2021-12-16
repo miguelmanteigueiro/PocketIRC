@@ -6,7 +6,14 @@ import java.util.regex.Pattern;
 public class Parser_v2{
   
   public static String[] tokenize(String data){
-    String[] arr = data.split(":");
+    String[] arr;
+    if(data.contains("PRIVMSG")){
+      arr = data.split(":", 3);
+      System.out.println(Arrays.toString(arr));
+    }
+    else{
+      arr = data.split(":");
+    }
     return Arrays.copyOfRange(arr, 1, arr.length);  
   }
 
@@ -186,7 +193,7 @@ public class Parser_v2{
 
   public static void main(String[] args){
    	try {
-      File myObj = new File("sample2");
+      File myObj = new File("sample");
       Scanner myReader = new Scanner(myObj);
       while (myReader.hasNextLine()) {
         String data = myReader.nextLine();
