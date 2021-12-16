@@ -50,6 +50,13 @@ public class MessageRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
       case "C"  :
       case "NS" :
       case "UM" : if (mData.get(position).getUser()[0].equals(mData.get(position + 1).getUser()[0])){
+                    if (mData.get(position).getMessage_type().equals("NS")) {
+                      if(!mData.get(position).getMsg().contains("Notice: "))
+                        mData.get(position).setMsg("Notice: "  + mData.get(position).getMsg());
+                      else
+                        mData.get(position).setMsg(mData.get(position).getMsg());
+                      return R.layout.notices_recycler_view_row;
+                    }
                     return R.layout.message_recycler_view_row;
                   } else {
                     return R.layout.user_recycler_view_row;
@@ -83,6 +90,11 @@ public class MessageRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
       view = mInflater.inflate(R.layout.join_leave_recycler_view_row, parent, false);
       holder = new EnterLeaveViewHolder(view);
     }
+    else if(viewType == R.layout.notices_recycler_view_row)
+    {
+      view = mInflater.inflate(R.layout.notices_recycler_view_row, parent, false);
+      holder = new NoticeViewHolder(view);
+    }
     //Default case
     else
     {
@@ -100,17 +112,25 @@ public class MessageRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     MessageIRC ap = mData.get(position);
     if (holder instanceof MessageViewHolder) {
       ((MessageViewHolder) holder).messageTextView.setText(Html.fromHtml(ap.getMsg()));
-    } else if (holder instanceof UserViewHolder) {
+    }
+
+    else if (holder instanceof UserViewHolder) {
       ((UserViewHolder) holder).userTextView.setText(ap.getUser()[0]);
       //Alterar cor de texto de utilizador aqui
       ((UserViewHolder) holder).hourTextView.setText(ap.getHour());
-    } else if (holder instanceof EnterLeaveViewHolder) {
+    }
+
+    else if (holder instanceof EnterLeaveViewHolder) {
       if(mData.get(position).getAction().equals("JOIN"))
         ((EnterLeaveViewHolder) holder).elTextView.setTextColor(Color.GREEN);
       else
         ((EnterLeaveViewHolder) holder).elTextView.setTextColor(Color.RED);
 
       ((EnterLeaveViewHolder) holder).elTextView.setText(ap.getMsg());
+    }
+
+    else if (holder instanceof NoticeViewHolder) {
+      ((NoticeViewHolder) holder).noticeTextView.setText(ap.getMsg());
     }
 
   }
@@ -161,6 +181,21 @@ public class MessageRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     EnterLeaveViewHolder(View itemView) {
       super(itemView);
       elTextView = itemView.findViewById(R.id.el_message);
+      itemView.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View view) {
+      if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
+    }
+  }
+
+  public class NoticeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    TextView noticeTextView;
+
+    NoticeViewHolder(View itemView) {
+      super(itemView);
+      noticeTextView = itemView.findViewById(R.id.notice_message);
       itemView.setOnClickListener(this);
     }
 
