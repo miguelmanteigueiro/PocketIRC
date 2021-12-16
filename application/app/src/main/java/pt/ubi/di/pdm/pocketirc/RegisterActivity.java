@@ -96,12 +96,12 @@ public class RegisterActivity extends Activity{
     }
     //register
     if(canRegister){
-      server.send_message("NICK "+usernameString+" \r\n");
-      server.send_message("PRIVMSG  nickserv register "+passwordString+" "+emailString+" \r\n");
-      server.out.close();
-      Intent confirmRegistrationIntent=new Intent(this,ConfirmRegisterActivity.class);
-      confirmRegistrationIntent.putExtra("Email",emailString);
-      startActivity(confirmRegistrationIntent);
+      server.login(usernameString,"",usernameString,":"+usernameString);
+      server.send_message("nickserv register "+passwordString+" "+emailString+" \r\n");
+
+      //Intent confirmRegistrationIntent=new Intent(this,ConfirmRegisterActivity.class);
+      //confirmRegistrationIntent.putExtra("Email",emailString);
+      //startActivity(confirmRegistrationIntent);
     }
     else{
       //show error dialog
