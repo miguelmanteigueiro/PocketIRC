@@ -7,6 +7,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.text.Html;
 import android.view.View;
 import android.widget.Button;
@@ -29,6 +30,7 @@ public class LoginActivity extends Activity{
   CheckBox passwordCheck;
   Space space;
   Button loginButton;
+  Server server;
 
   //== methods ==
   /**
@@ -103,22 +105,11 @@ public class LoginActivity extends Activity{
     channelString=formatChannel(channelString);
     //log in
     if(canLogIn){
-      if(requiresPassword){
-        //loginNonGuest(usernameString,passwordString,channelString); //uncomment
-        //Intent chatIntent=new Intent(this,ChatRoom.class); //uncomment
-        //chatIntent.putExtra("username",usernameString); //uncomment
-        //chatIntent.putExtra("password",passwordString); //uncomment
-        //chatIntent.putExtra("channel",channelString); //uncomment
-        //startActivity(chatIntent); //uncomment
-      }
-      else{
-        //loginGuest(usernameString,channelString); //uncomment
-        //Intent chatIntent=new Intent(this,ChatRoom.class); //uncomment
-        //chatIntent.putExtra("username",usernameString); //uncomment
-        //chatIntent.putExtra("password",passwordString); //uncomment
-        //chatIntent.putExtra("channel",channelString); //uncomment
-        //startActivity(chatIntent); //uncomment
-      }
+        Intent chatIntent=new Intent(this,ChatRoom.class); //uncomment
+        chatIntent.putExtra("username",usernameString); //uncomment
+        chatIntent.putExtra("password",passwordString); //uncomment
+        chatIntent.putExtra("channel",channelString); //uncomment
+        startActivity(chatIntent); //uncomment
     }
     else{
       //show error dialog

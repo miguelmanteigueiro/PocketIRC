@@ -89,6 +89,10 @@ public class RegisterActivity extends Activity{
     }
     //register
     if(canRegister){
+      ///msg NickServ VERIFY REGISTER nick code
+      ///nick your_favorite_nickname
+      //"/msg nickserv register "+ passwordString+ " your@email.address"
+
       //registerUser(usernameString,passwordString,emailString); //uncomment
       Intent confirmRegistrationIntent=new Intent(this,ConfirmRegisterActivity.class);
       confirmRegistrationIntent.putExtra("Email",emailString);
