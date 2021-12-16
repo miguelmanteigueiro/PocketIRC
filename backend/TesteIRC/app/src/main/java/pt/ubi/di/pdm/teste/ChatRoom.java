@@ -486,7 +486,6 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
 
     return s.toString().trim();
   }
-
   //Verifies if a string is made entirely of blank spaces
   public static boolean isBlank(final CharSequence cs) {
     int strLen;
