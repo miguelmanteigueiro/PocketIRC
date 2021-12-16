@@ -7,6 +7,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.Patterns;
@@ -20,6 +21,8 @@ public class RegisterActivity extends Activity{
   //== attributes ==
   //declare xml attributes
   EditText username,password,confirmPassword,email;
+  //server
+  Server server;
 
   //== methods ==
   /**
@@ -41,6 +44,10 @@ public class RegisterActivity extends Activity{
     password.setText("");
     confirmPassword.setText("");
     email.setText("");
+    //server
+    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+    StrictMode.setThreadPolicy(policy);
+    server = new Server("irc.libera.chat",6667);
   }
   /**
    * Check if the parameters are correct and register the user
@@ -89,11 +96,9 @@ public class RegisterActivity extends Activity{
     }
     //register
     if(canRegister){
-      ///msg NickServ VERIFY REGISTER nick code
-      ///nick your_favorite_nickname
-      //"/msg nickserv register "+ passwordString+ " your@email.address"
-
-      //registerUser(usernameString,passwordString,emailString); //uncomment
+      server.send_message("NICK "+usernameString+" \r\n");
+      server.send_message("PRIVMSG  nickserv register "+passwordString+" "+emailString+" \r\n");
+      server.out.close();
       Intent confirmRegistrationIntent=new Intent(this,ConfirmRegisterActivity.class);
       confirmRegistrationIntent.putExtra("Email",emailString);
       startActivity(confirmRegistrationIntent);
