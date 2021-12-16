@@ -56,11 +56,11 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
   public static RecyclerView messageRecyclerView;
   RecyclerView channelsRecyclerView;
   RecyclerView privMessagesRecyclerView;
-  Toolbar toolbar;
+  static Toolbar toolbar;
 
   //Instantiate the drawers
-  private DrawerLayout drawerLayout;
-  private LinearLayout leftDrawer;
+  static DrawerLayout drawerLayout;
+  static LinearLayout leftDrawer;
   private LinearLayout rightDrawer;
   private ImageButton addChannelButton;
 
