@@ -254,9 +254,14 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
                 // Update list of users in the channel
                 cmd.names(chatName);
                 m.setUser(new String[]{"", m.getUser()[0], ""});
-                // Quit appears on current channel no matter if user is on it
+                // Quit appears just if the user is on the user's quit channel
                 if(m.getMessage_type().equals("UQ")) {
-                  m.setChannel(channel);
+                  if(channelUserList.contains(m.getUser()[0])){
+                    m.setChannel(channel);
+                  }
+                  else{
+                    return;
+                  }
                 }
                 channels_messageList.get(channel).add(0, m);
               }
