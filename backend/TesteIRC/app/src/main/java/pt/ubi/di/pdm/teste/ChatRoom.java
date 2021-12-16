@@ -1,10 +1,15 @@
 package pt.ubi.di.pdm.teste;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.text.InputType;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -15,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.res.TypedArrayUtils;
@@ -50,12 +56,13 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
   public static RecyclerView messageRecyclerView;
   RecyclerView channelsRecyclerView;
   RecyclerView privMessagesRecyclerView;
-  Toolbar toolbar;
+  static Toolbar toolbar;
 
   //Instantiate the drawers
-  private DrawerLayout drawerLayout;
-  private LinearLayout leftDrawer;
+  static DrawerLayout drawerLayout;
+  static LinearLayout leftDrawer;
   private LinearLayout rightDrawer;
+  private ImageButton addChannelButton;
 
   //Create the private chats list and the chats list
   private ArrayList<String> chatsList;
@@ -106,6 +113,7 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
     channelsRecyclerView = (RecyclerView)findViewById(R.id.drawer_channels_list);
     privMessagesRecyclerView = (RecyclerView) findViewById(R.id.drawer_messages_list);
     messageRecyclerView = (RecyclerView) findViewById(R.id.chat_messageContainer);
+    addChannelButton = (ImageButton) findViewById(R.id.drawer_addChannel);
 
     // HashMap that handles the messages by channels
     channels_messageList = new HashMap<String, ArrayList<MessageIRC>>();
@@ -124,6 +132,92 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
     server.join(chatName, "");
 
     cmd = new Commands(server.out);
+
+    //Listeners
+    addChannelButton.setOnClickListener(v -> {
+      AlertDialog.Builder builder = new AlertDialog.Builder(this);
+      TextView title = new TextView(this);
+      // You Can Customise your Title here
+      title.setText("Add channel/user");
+      title.setBackgroundColor(Color.DKGRAY);
+      title.setPadding(10, 10, 10, 10);
+      title.setGravity(Gravity.CENTER);
+      title.setTextColor(Color.WHITE);
+      title.setTextSize(20);
+
+      builder.setCustomTitle(title);
+
+      EditText user_input = new EditText(this);
+      LinearLayout layout = new LinearLayout(this);
+
+      user_input.setInputType(InputType.TYPE_CLASS_TEXT);
+      user_input.setHint("Channel/Username");
+
+      layout.addView(user_input);
+      layout.setGravity(Gravity.CENTER);
+      layout.setOrientation(LinearLayout.VERTICAL);
+      layout.setPadding(0,20,0,20);
+
+      builder.setView(layout);
+      //🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹
+      // Dialog box "OK" button
+      builder.setPositiveButton("OK", new DialogInterface.OnClickListener(){
+        @Override
+        public void onClick(DialogInterface dialog, int i) {
+          String aux = user_input.getText().toString();
+          System.out.println(aux);
+
+          if(aux.isEmpty() || isBlank(aux)) {
+            Toast.makeText(ChatRoom.this, "Chat is loading", Toast.LENGTH_SHORT).show();
+          }
+          else {
+            if(aux.charAt(0) == '#') {
+              chatsList.add(aux);
+              channelsAdapter = new ChannelsRecyclerViewAdapter(ChatRoom.this, chatsList);
+              channelsRecyclerView.setAdapter(channelsAdapter);
+              cmd.join(aux,"");
+            }
+            else{
+              privateChatsList.add(aux);
+              privMessagesAdapter = new ChannelsRecyclerViewAdapter(ChatRoom.this, privateChatsList);
+              privMessagesRecyclerView.setAdapter(privMessagesAdapter);
+              MessageIRC m = new MessageIRC();
+              m.setRecipient(userName);
+              m.setMsg("");
+              m.setChannel(aux);
+              m.setMessage_type("UM");
+              m.setAction("PRIVMSG");
+              m.setUser(new String[]{"","",""});
+              if(!channels_messageList.containsKey(aux)) {
+                channels_messageList.put(aux,new ArrayList<>());
+              }
+              channels_messageList.get(aux).add(m);
+            }
+
+            toolbar.setTitle(aux);
+            chatName = aux;
+            if(!channels_messageList.containsKey(chatName)) {
+              channels_messageList.put(chatName,new ArrayList<>());
+            }
+            messageAdapter = new MessageRecyclerViewAdapter(ChatRoom.this, channels_messageList.get(chatName));
+            messageRecyclerView.setAdapter(messageAdapter);
+            messageAdapter.setClickListener(ChatRoom.this);
+
+            drawerLayout.closeDrawer(leftDrawer);
+          }
+
+        }
+      });
+      builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialogInterface, int i) {
+          dialogInterface.dismiss();
+        }
+      });
+
+      builder.show();
+
+    });
 
     //Initialize the chat lists
     privateChatsList = new ArrayList<>();
@@ -329,8 +423,8 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
             }
             else{
               // mention user
-              m.setMsg(mention_user(m));
               cmd.msg(chatName, m.getMsg());
+              m.setMsg(mention_user(m));
             }
 
             //Update recyclerView
@@ -352,7 +446,7 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
   public static String mention_user(MessageIRC m){
     String[] tempMessageSplit = m.getMsg().split(" ");
     for (String word : tempMessageSplit){
-      if(channelUserList.contains(word)){
+      if(channelUserList.contains(word) || channelUserList.contains("@" + word)){
         tempMessageSplit[Arrays.asList(tempMessageSplit).indexOf(word)] = "<font color='#EE0000'>" + word + "</font>";
       }
     }
@@ -385,8 +479,26 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
     MessageIRC m = messageAdapter.getItem(position);
     System.out.println(m.getMsg());
   }
-  /*// Update message Adapter
-    messageAdapter = new MessageRecyclerViewAdapter(getApplicationContext(), channels_messageList.get(channel));
-    messageRecyclerView.setAdapter(messageAdapter);
-    messageAdapter.setClickListener(ChatRoom.this);*/
+
+  @Override
+  public void onBackPressed() {
+    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+    builder.setTitle("Log-out");
+    builder.setMessage("Are you sure?");
+
+    builder.setPositiveButton("YES", (dialog, which) -> {
+      // Do nothing but close the dialog
+      finish();
+      System.exit(0);
+      dialog.dismiss();
+    });
+    builder.setNegativeButton("NO", (dialog, which) -> {
+
+      // Do nothing
+      dialog.dismiss();
+    });
+    AlertDialog alert = builder.create();
+    alert.show();
+  }
 }

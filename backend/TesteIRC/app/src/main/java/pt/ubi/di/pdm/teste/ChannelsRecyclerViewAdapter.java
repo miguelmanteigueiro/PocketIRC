@@ -47,6 +47,9 @@ public class ChannelsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
                 messageAdapter = new MessageRecyclerViewAdapter(v.getContext(), ChatRoom.channels_messageList.get(ChatRoom.chatName));
                 ChatRoom.messageRecyclerView.setAdapter(messageAdapter);
                 messageAdapter.setClickListener(ChannelsRecyclerViewAdapter.this);
+
+                ChatRoom.toolbar.setTitle(ChatRoom.chatName);
+                ChatRoom.drawerLayout.closeDrawer(ChatRoom.leftDrawer);
             }
         });
     }
