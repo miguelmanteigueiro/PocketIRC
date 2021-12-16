@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextClock;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,13 +34,14 @@ import com.google.android.material.navigation.NavigationView;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Calendar;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAdapter.ItemClickListener{
+public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAdapter.ItemClickListener, UsersRecyclerViewAdapter.ItemClickListenerUser{
 
   //Instantiate the list
   ArrayList<MessageIRC> messageList = new ArrayList<MessageIRC>();
@@ -53,10 +55,13 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
   public static MessageRecyclerViewAdapter messageAdapter;
   ChannelsRecyclerViewAdapter channelsAdapter;
   ChannelsRecyclerViewAdapter privMessagesAdapter;
+  UsersRecyclerViewAdapter userAdapter;
   public static RecyclerView messageRecyclerView;
   RecyclerView channelsRecyclerView;
   RecyclerView privMessagesRecyclerView;
+  RecyclerView userRecyclerView;
   static Toolbar toolbar;
+  TextView userListTitle;
 
   //Instantiate the drawers
   static DrawerLayout drawerLayout;
@@ -70,12 +75,13 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
   public static HashMap<String, ArrayList<MessageIRC>> channels_messageList;
 
   //Chat variables
-  Commands cmd;
+  static Commands cmd;
   String userName;
   public static String chatName;
 
   // create an arraylist of strings to store the users in a channel
   public static ArrayList<String> channelUserList = new ArrayList<>();
+
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -100,8 +106,21 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
     leftHamburger.setOnClickListener(v -> {
       drawerLayout.openDrawer(leftDrawer);
     });
+
     rightHamburger.setOnClickListener(v -> {
       drawerLayout.openDrawer(rightDrawer);
+      cmd.names(chatName);
+      userAdapter = new UsersRecyclerViewAdapter(this, channelUserList);
+
+      //IF IT IS AN USER (Penso)
+      if(chatName.charAt(0) != '#') {
+        userAdapter = new UsersRecyclerViewAdapter(this, new ArrayList<String>(Arrays.asList(userName, chatName)));
+        userListTitle.setText("Active users: 2");
+      }
+      else{
+        userAdapter.setClickListener(this);
+      }
+      userRecyclerView.setAdapter(userAdapter);
     });
 
     //========================================================================================
@@ -112,8 +131,10 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
     sendMessage = (EditText)findViewById(R.id.chat_sendMessageBox);
     channelsRecyclerView = (RecyclerView)findViewById(R.id.drawer_channels_list);
     privMessagesRecyclerView = (RecyclerView) findViewById(R.id.drawer_messages_list);
+    userRecyclerView = (RecyclerView) findViewById(R.id.drawer_user_list);
     messageRecyclerView = (RecyclerView) findViewById(R.id.chat_messageContainer);
     addChannelButton = (ImageButton) findViewById(R.id.drawer_addChannel);
+    userListTitle = (TextView) findViewById(R.id.drawer_userTitle);
 
     // HashMap that handles the messages by channels
     channels_messageList = new HashMap<String, ArrayList<MessageIRC>>();
@@ -227,6 +248,7 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
     //Setup the channels lists recycler views
     LinearLayoutManager linearLayoutManagerChannels = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true);
     LinearLayoutManager linearLayoutManagerPrivMessages = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true);
+    LinearLayoutManager linearLayoutManagerUser = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true);
 
     //Channels list adapter
     channelsRecyclerView.setLayoutManager(linearLayoutManagerChannels);
@@ -237,6 +259,9 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
     privMessagesRecyclerView.setLayoutManager(linearLayoutManagerPrivMessages);
     privMessagesAdapter = new ChannelsRecyclerViewAdapter(this, privateChatsList);
     privMessagesRecyclerView.setAdapter(privMessagesAdapter);
+
+    //User adapter
+    userRecyclerView.setLayoutManager(linearLayoutManagerUser);
 
     //Add to the hashmap
     channels_messageList.put(chatName,new ArrayList<>());
@@ -296,6 +321,10 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
               // check if code = 353 (same as NAMES), so we can get the list of users in the channel
               if(m.getCode() == 353){
                 channelUserList.addAll(Arrays.asList(m.getMsg().split(" ")));
+                Set<String> set = new HashSet<>(channelUserList);
+                channelUserList.clear();
+                channelUserList.addAll(set);
+                userListTitle.setText("Active users: "+ channelUserList.size());
               }
 
               String channel = m.getChannel();
@@ -381,7 +410,6 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
     sendButton.setOnClickListener(
       oView -> {
         String aux = sendMessage.getText().toString();
-
         if(!isBlank(aux) && !aux.isEmpty())
         {
           //Updates message list
@@ -481,6 +509,11 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
   }
 
   @Override
+  public void onItemClickUser(View view, int position) {
+    System.out.println(channelUserList.get(position));
+  }
+
+  @Override
   public void onBackPressed() {
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
@@ -501,4 +534,5 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
     AlertDialog alert = builder.create();
     alert.show();
   }
+
 }

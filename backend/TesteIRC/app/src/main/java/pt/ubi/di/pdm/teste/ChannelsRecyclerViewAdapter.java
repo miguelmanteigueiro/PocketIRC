@@ -50,6 +50,12 @@ public class ChannelsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
                 ChatRoom.toolbar.setTitle(ChatRoom.chatName);
                 ChatRoom.drawerLayout.closeDrawer(ChatRoom.leftDrawer);
+
+                //Empty the user List
+                ChatRoom.channelUserList.clear();
+
+                //Update userList
+                ChatRoom.cmd.names(ChatRoom.chatName);
             }
         });
     }

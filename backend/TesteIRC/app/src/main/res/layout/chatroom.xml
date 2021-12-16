@@ -142,10 +142,7 @@
         android:minWidth="250dp"
         android:background="@color/white"
         android:orientation="vertical">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Ciganito"/>
+        <include layout="@layout/right_drawer"/>
     </LinearLayout>
 
 </androidx.drawerlayout.widget.DrawerLayout>
