@@ -36,7 +36,7 @@ public class UsersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
         ((UsersRecyclerViewAdapter.ViewHolder)holder).typeTextView.setText(mData.get(position));
-        ((UsersRecyclerViewAdapter.ViewHolder) holder).typeTextView.setTextColor(Color.parseColor(toColor(mData.get(position))));
+        ((UsersRecyclerViewAdapter.ViewHolder) holder).typeTextView.setTextColor(toColor(mData.get(position)));
         ((UsersRecyclerViewAdapter.ViewHolder)holder).typeTextView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
     }
 
@@ -78,7 +78,18 @@ public class UsersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
         void onItemClickUser(View view, int position);
     }
 
-    private String toColor(String arg) {
-        return "#"+String.format("%x", new BigInteger(1, arg.getBytes(StandardCharsets.UTF_8)).intValue() - 19236).substring(0,6);
+    private int toColor(String arg) {
+        int sum = 0;
+        for(char ch : arg.toCharArray())
+            sum += (int)ch;
+
+        Double rDouble = Double.valueOf("0." + String.valueOf(Math.sin(sum + 1)).substring(6)) * 256;
+        Double gDouble = Double.valueOf("0." + String.valueOf(Math.sin(sum + 2)).substring(6)) * 256;
+        Double bDouble = Double.valueOf("0." + String.valueOf(Math.sin(sum + 3)).substring(6)) * 256;
+        int r = rDouble.intValue();
+        int g = gDouble.intValue();
+        int b = bDouble.intValue();
+
+        return Color.rgb(r,g,b);
     }
 }

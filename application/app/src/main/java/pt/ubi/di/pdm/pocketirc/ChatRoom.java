@@ -629,6 +629,6 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
     builder.show();
   }
 
-  
+
 }
 

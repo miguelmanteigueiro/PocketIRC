@@ -118,7 +118,7 @@ public class MessageRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     else if (holder instanceof UserViewHolder) {
       ((UserViewHolder) holder).userTextView.setText(ap.getUser()[0]);
-      ((UserViewHolder) holder).userTextView.setTextColor(Color.parseColor(toColor(ap.getUser()[0])));
+      ((UserViewHolder) holder).userTextView.setTextColor(toColor(ap.getUser()[0]));
       //Alterar cor de texto de utilizador aqui
       ((UserViewHolder) holder).hourTextView.setText(ap.getHour());
     }
@@ -223,7 +223,18 @@ public class MessageRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     void onItemClick(View view, int position);
   }
 
-  private String toColor(String arg) {
-    return "#"+String.format("%x", new BigInteger(1, arg.getBytes(StandardCharsets.UTF_8)).intValue() - 19236).substring(0,6);
+  private int toColor(String arg) {
+    int sum = 0;
+    for(char ch : arg.toCharArray())
+      sum += (int)ch;
+
+    Double rDouble = Double.valueOf("0." + String.valueOf(Math.sin(sum + 1)).substring(6)) * 256;
+    Double gDouble = Double.valueOf("0." + String.valueOf(Math.sin(sum + 2)).substring(6)) * 256;
+    Double bDouble = Double.valueOf("0." + String.valueOf(Math.sin(sum + 3)).substring(6)) * 256;
+    int r = rDouble.intValue();
+    int g = gDouble.intValue();
+    int b = bDouble.intValue();
+
+    return Color.rgb(r,g,b);
   }
 }
