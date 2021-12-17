@@ -52,7 +52,7 @@ public class MessageRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
       case "C"  :
       case "NS" :
       case "UM" : if (mData.get(position).getUser()[0].equals(mData.get(position + 1).getUser()[0])){
-                    if (mData.get(position).getMessage_type().equals("NS")) {
+                    if (mData.get(position).getAction().equals("NOTICE")){
                       if(!mData.get(position).getMsg().contains("Notice: "))
                         mData.get(position).setMsg("Notice: "  + mData.get(position).getMsg());
                       else
