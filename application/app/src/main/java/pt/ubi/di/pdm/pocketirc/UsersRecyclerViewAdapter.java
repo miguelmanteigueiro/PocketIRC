@@ -1,6 +1,7 @@
 package pt.ubi.di.pdm.pocketirc;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,8 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +36,8 @@ public class UsersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
         ((UsersRecyclerViewAdapter.ViewHolder)holder).typeTextView.setText(mData.get(position));
+        ((UsersRecyclerViewAdapter.ViewHolder) holder).typeTextView.setTextColor(Color.parseColor(toColor(mData.get(position))));
+        ((UsersRecyclerViewAdapter.ViewHolder)holder).typeTextView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
     }
 
     // total number of rows
@@ -71,5 +76,9 @@ public class UsersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
     // parent activity will implement this method to respond to click events
     public interface ItemClickListenerUser {
         void onItemClickUser(View view, int position);
+    }
+
+    private String toColor(String arg) {
+        return "#"+String.format("%x", new BigInteger(1, arg.getBytes(StandardCharsets.UTF_8)).intValue() - 19236).substring(0,6);
     }
 }

@@ -22,7 +22,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="10"
+            android:textStyle="bold"
             android:layout_gravity="center"
+            android:textAlignment="center"
             android:textSize="24sp"
             android:text="Active users" />
     </LinearLayout>
@@ -30,6 +32,8 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/drawer_user_list"
         android:layout_width="match_parent"
+        android:scrollbarFadeDuration="0"
+        app:stackFromEnd="false"
         android:layout_height="wrap_content" />
 
 </LinearLayout>

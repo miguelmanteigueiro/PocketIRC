@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public class MessageRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
@@ -116,6 +118,7 @@ public class MessageRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     else if (holder instanceof UserViewHolder) {
       ((UserViewHolder) holder).userTextView.setText(ap.getUser()[0]);
+      ((UserViewHolder) holder).userTextView.setTextColor(Color.parseColor(toColor(ap.getUser()[0])));
       //Alterar cor de texto de utilizador aqui
       ((UserViewHolder) holder).hourTextView.setText(ap.getHour());
     }
@@ -218,5 +221,9 @@ public class MessageRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
   // parent activity will implement this method to respond to click events
   public interface ItemClickListener {
     void onItemClick(View view, int position);
+  }
+
+  private String toColor(String arg) {
+    return "#"+String.format("%x", new BigInteger(1, arg.getBytes(StandardCharsets.UTF_8)).intValue() - 19236).substring(0,6);
   }
 }
