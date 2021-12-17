@@ -197,7 +197,7 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
       layout.setPadding(0,20,0,20);
 
       builder.setView(layout);
-      //🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹
+      //🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹
       // Dialog box "OK" button
       builder.setPositiveButton("OK", new DialogInterface.OnClickListener(){
         @Override
@@ -369,7 +369,6 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
 
               // Add special message to the list to display User name
               if(m.getMessage_type().equals("C") || m.getMessage_type().equals("UM") || m.getMessage_type().equals("NS")){
-
                 // mention user
                 m.setMsg(mention_user(m));
 
@@ -399,8 +398,8 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
                 m.setUser(new String[]{"", m.getUser()[0], ""});
                 // Quit appears just if the user is on the user's quit channel
                 if(m.getMessage_type().equals("UQ")) {
-                  if(channelUserList.contains(m.getUser()[0])){
-                    m.setChannel(channel);
+                  if(channelUserList.contains(m.getUser()[1])){
+                    m.setChannel(chatName);
                   }
                   else{
                     return;
@@ -493,9 +492,11 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
 
   public static String mention_user(MessageIRC m){
     String[] tempMessageSplit = m.getMsg().split(" ");
-    for (String word : tempMessageSplit){
-      if(channelUserList.contains(word) || channelUserList.contains("@" + word)){
-        tempMessageSplit[Arrays.asList(tempMessageSplit).indexOf(word)] = "<font color='#EE0000'>" + word + "</font>";
+    for (String name : channelUserList){
+      for(String word : tempMessageSplit){
+        if(word.contains(name) || ("@" + word).contains(name)){
+          tempMessageSplit[Arrays.asList(tempMessageSplit).indexOf(word)] = "<font color='#EE0000'>" + word + "</font>";
+        }
       }
     }
 
@@ -506,6 +507,7 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
 
     return s.toString().trim();
   }
+
   //Verifies if a string is made entirely of blank spaces
   public static boolean isBlank(final CharSequence cs) {
     int strLen;
