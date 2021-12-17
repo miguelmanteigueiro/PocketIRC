@@ -31,6 +31,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.navigation.NavigationView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -338,6 +339,14 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
                 return;
               }
 
+              // check if action is NICK
+              if(m.getMessage_type().equals("N")){
+                channelUserList.remove(userName);
+                userName = m.getMsg();
+                channelUserList.add(userName);
+                return;
+              }
+
               // check if code = 353 (same as NAMES), so we can get the list of users in the channel
               if(m.getCode() == 353){
                 channelUserList.addAll(Arrays.asList(m.getMsg().split(" ")));
@@ -345,6 +354,15 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
                 channelUserList.clear();
                 channelUserList.addAll(set);
                 userListTitle.setText("Active users: "+ channelUserList.size());
+              }
+
+              // check if code is 433
+              if(m.getCode() == 433){
+                String s = generate_name(userName);
+                cmd.nick(s);
+                userName = s;
+                cmd.join(chatName, "");
+                Toast.makeText(ChatRoom.this, "Username already taken! Using " + s, Toast.LENGTH_SHORT).show();
               }
 
               String channel = m.getChannel();
@@ -556,4 +574,8 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
     alert.show();
   }
 
+  private String generate_name(String name){
+    return name + String.valueOf((int)(Math.random() * 100));
+  }
 }
+

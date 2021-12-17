@@ -44,10 +44,13 @@ public class RegisterActivity extends Activity{
     password.setText("");
     confirmPassword.setText("");
     email.setText("");
+
     //server
     StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
     StrictMode.setThreadPolicy(policy);
+
     server = new Server("irc.libera.chat",6667);
+
   }
   /**
    * Check if the parameters are correct and register the user

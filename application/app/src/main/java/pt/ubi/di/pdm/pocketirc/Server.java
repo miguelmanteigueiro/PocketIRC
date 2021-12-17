@@ -59,6 +59,17 @@ public class Server{
     this.cmd.join(channel, keys);
   }
 
+  public void create_connection(){
+    try{
+      this.socket = new Socket(ip, port);
+      this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+      this.out = new PrintWriter(socket.getOutputStream(), true);
+    }
+    catch (IOException e){
+      System.out.println(e);
+    }
+  }
+
   public void send_message(String message){
     this.out.println(message);
   }

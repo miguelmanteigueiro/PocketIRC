@@ -139,6 +139,11 @@ public class Parser{
       // Get action
       action = getAction(arr);
 
+      // check if is a NICK action
+      if(action.equals("NICK")){
+        message_type = "N";
+      }
+
       // Checks if action is NOTICE or PRIVMSG
       if(action.equals("NOTICE") || action.equals("PRIVMSG")){
         recipient = getRecipient(arr);
