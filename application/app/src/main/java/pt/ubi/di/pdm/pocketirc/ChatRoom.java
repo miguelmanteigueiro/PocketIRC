@@ -473,8 +473,8 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
               server.send_message(temp_message);
             }
             else{
-              // mention user
               cmd.msg(chatName, m.getMsg());
+              // check user mention
               m.setMsg(mention_user(m));
             }
 

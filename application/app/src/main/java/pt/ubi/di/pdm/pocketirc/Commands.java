@@ -1,18 +1,17 @@
 package pt.ubi.di.pdm.pocketirc;/* Commands:
-- away      FEITO
-- back      FEITO
-- clear     TODO NO ANDROID
-- cycle     FEITO
-- ignore    NOT NOW
-- invite    FEITO
-- kick      FEITO
-- msg       FEITO
-- nick      FEITO
-- notice    FEITO
-- part      FEITO
-- topic     FEITO
-- unignore  NOT NOW
-- whois     FEITO
+- away      FEITO GUI TODO
+- back      FEITO GUI TODO
+- clear     TODO NO ANDROID GUI
+- ignore    NOT NOW TODO
+- unignore  NOT NOW TODO
+- invite    FEITO DONE
+- kick      FEITO DONE
+- msg       FEITO GUI DONE
+- nick      FEITO GUI TODO
+- notice    FEITO DONE
+- part      FEITO GUI DONE
+- topic     FEITO GUI TODO
+- whois     FEITO GUI TODO
 */
 
 import java.io.PrintWriter;
@@ -31,6 +30,9 @@ class Commands{
   }
  
   public void away(String message){
+    if(message.equals("")){
+      message = "brb";
+    }
     this.out.println("AWAY " + message + suffix);
   }
 
@@ -42,12 +44,6 @@ class Commands{
     // clears the screen 
   }
   
-  public void cycle(String channel){
-    // leave channel and join again
-    this.out.println("PART " + channel + suffix);
-    this.out.println("JOIN " + channel + suffix);
-  }
-
   public void invite(String nickname, String channel){
     this.out.println("INVITE " + nickname + " " + channel + suffix);
   }
@@ -117,32 +113,12 @@ class Commands{
   }
 
   public static String replaceCommand(String s){
-    if(s.startsWith("/msg")){
-      String replaced = s.replace("/msg", "PRIVMSG");
-      return replaced;
-    }
-    if(s.startsWith("/me")){
-      String replaced = s.replace("/me", "ACTION");
-      return replaced;
-    }
     if(s.startsWith("/back")){
       String replaced = s.replace("/back", "AWAY");
       return replaced;
     }
     if(s.startsWith("/away")){
       String replaced = s.replace("/away", "AWAY");
-      return replaced;
-    }
-    if(s.startsWith("/part")){
-      String replaced = s.replace("/part", "PART");
-      return replaced;
-    }
-    if(s.startsWith("/join")){
-      String replaced = s.replace("/join", "JOIN");
-      return replaced;
-    }
-    if(s.startsWith("/whois")){
-      String replaced = s.replace("/whois", "WHOIS");
       return replaced;
     }
     if(s.startsWith("/notice")){
@@ -157,18 +133,10 @@ class Commands{
       String replaced = s.replace("/kick", "KICK");
       return replaced;
     }
-    if(s.startsWith("/pass")){
-      String replaced = s.replace("/pass", "PASS");
-      return replaced;
-    }
     if(s.startsWith("/nick")){
       String replaced = s.replace("/nick", "NICK");
       return replaced;
     }
-    if(s.startsWith("/user")){
-      String replaced = s.replace("/user", "USER");
-      return replaced;
-    }
-    return s; //failsafe
+    return s;
   }
 }
