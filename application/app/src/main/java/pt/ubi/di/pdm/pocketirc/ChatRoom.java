@@ -277,6 +277,14 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
                 // update new chatname
                 chatName = m.getChannel();
                 chatsList.add(chatName);
+                // update adapter
+                channelsAdapter = new ChannelsRecyclerViewAdapter(ChatRoom.this, chatsList);
+                channelsRecyclerView.setAdapter(channelsAdapter);
+                // update toolbar
+                toolbar.setTitle(chatName);
+                // show toast to advice the user that have been forward
+                Toast.makeText(ChatRoom.this, "You have been forward to " + chatName, Toast.LENGTH_SHORT).show();
+
               }
 
               // check if code = 353 (same as NAMES), so we can get the list of users in the channel
