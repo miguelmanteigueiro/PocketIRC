@@ -264,14 +264,26 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
 
               // check if action is NICK
               if(m.getMessage_type().equals("N")){
-                channelUserList.remove(userName);
-                userName = m.getMsg();
+                String old_username = m.getUser()[0];
+                String new_usernmae = m.getMsg();
+                // update list
+                channelUserList.remove(old_username);
                 channelUserList.add(userName);
+                // update hashmap
+                ArrayList<MessageIRC> temp = channels_messageList.get(old_username);
+                channels_messageList.remove(old_username);
+                channels_messageList.put(new_usernmae, temp);
+                // update username if the command is from app's user
+                if(old_username.equals(userName)){
+                  userName = new_usernmae;
+                }
                 return;
               }
 
               // forward to another channel
               if(m.getCode() == 470){
+                // clean channel user list
+                channelUserList.clear();
                 // remove added chatname
                 chatsList.remove(chatName);
                 // update new chatname
@@ -286,7 +298,7 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
                 Toast.makeText(ChatRoom.this, "You have been forward to " + chatName, Toast.LENGTH_SHORT).show();
 
               }
-
+              // manage kicks
               if(m.getAction().equals("KICK") && m.getMsg().equals(userName)){
                 chatsList.remove(m.getChannel());
                 channels_messageList.remove(m.getChannel());
@@ -318,7 +330,7 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
 
               }
 
-              // check if code = 353 (same as NAMES), so we can get the list of users in the channel
+              // names (update user list)
               if(m.getCode() == 353){
                 channelUserList.addAll(Arrays.asList(m.getMsg().split(" ")));
                 Set<String> set = new HashSet<>(channelUserList);

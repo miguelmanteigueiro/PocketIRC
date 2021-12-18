@@ -122,6 +122,7 @@ public class Parser{
         user[0] = "NickServ";
         user[1] = "NickServ";
         user[2] = "NickServ";
+        action = "NOTICE";
       }
     	else{
         message_type = "S";
