@@ -270,6 +270,15 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
                 return;
               }
 
+              // forward to another channel
+              if(m.getCode() == 470){
+                // remove added chatname
+                chatsList.remove(chatName);
+                // update new chatname
+                chatName = m.getChannel();
+                chatsList.add(chatName);
+              }
+
               // check if code = 353 (same as NAMES), so we can get the list of users in the channel
               if(m.getCode() == 353){
                 channelUserList.addAll(Arrays.asList(m.getMsg().split(" ")));

@@ -171,6 +171,11 @@ public class Parser{
     }
     // Get code
     code = getIRCCode(arr);
+    // forward channel message
+    if(code == 470){
+      // get new channel
+      channel = arr[0].split(" ")[4];
+    }
     // Get msg content
     msg = getMessage(arr);
 

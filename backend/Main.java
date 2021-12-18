@@ -2,7 +2,7 @@ public class Main {
     public static void main(String[] args) throws Exception {
         // Create a new instance of the class Server
         Server server = new Server("irc.libera.chat", 6667);
-        String nick = "angelo";
+        String nick = "userheni";
         server.login(nick, "", nick, ":garfadaDeSopa");
         server.join("#heni");
 
