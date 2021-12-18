@@ -68,6 +68,9 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
   static Toolbar toolbar;
   TextView userListTitle;
 
+  // ignore list
+  ArrayList<String> ignore_list;
+
   //Declare the drawers
   static DrawerLayout drawerLayout;
   static LinearLayout leftDrawer;
@@ -161,6 +164,9 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
     channel_status = new HashMap<>();
     channel_status.put(chatName,0);
     channel_status.put("NickServ",0);
+
+    // ignore list
+    ignore_list = new ArrayList<>();
 
     MessageIRC firstMessage = new MessageIRC();
     firstMessage.setRecipient(userName);
@@ -269,6 +275,13 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
               if(m.getMessage_type().equals("P")){
                 cmd.pong();
                 return;
+              }
+
+              // check if user is in ignore list
+              if(m.getMessage_type().equals("C") || m.getMessage_type().equals("UM")){
+                if(ignore_list.contains(m.getUser()[0])){
+                  return;
+                }
               }
 
               // check if action is NICK
@@ -498,6 +511,24 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
             //Send message to server
             String temp_message = m.getMsg();
             if(Commands.checkIfCommand(temp_message)){
+              // check if is ignore or unignore command
+              if(temp_message.contains("/ignore") || temp_message.contains("/unignore")){
+                // get user to ignore
+                String[] temp_message_splited = temp_message.split(" ");
+                if(temp_message_splited.length > 1){
+                  if(temp_message.contains("/ignore")){
+                    ignore_list.add(temp_message_splited[1]);
+                  }
+                  else{
+                    if(temp_message_splited[1].equals("all")){
+                      ignore_list.clear();
+                    }
+                    else{
+                      ignore_list.remove(temp_message_splited[1]);
+                    }
+                  }
+                }
+              }
               // Parse the command message
               temp_message = Commands.replaceCommand(temp_message);
               server.send_message(temp_message);
