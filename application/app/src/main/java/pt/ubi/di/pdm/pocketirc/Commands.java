@@ -113,14 +113,6 @@ class Commands{
   }
 
   public static String replaceCommand(String s){
-    if(s.startsWith("/back")){
-      String replaced = s.replace("/back", "AWAY");
-      return replaced;
-    }
-    if(s.startsWith("/away")){
-      String replaced = s.replace("/away", "AWAY");
-      return replaced;
-    }
     if(s.startsWith("/notice")){
       String replaced = s.replace("/notice", "NOTICE");
       return replaced;

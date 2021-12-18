@@ -43,6 +43,8 @@ import java.util.Calendar;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -55,6 +57,8 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
 
   //Declare the widgets
   ImageButton sendButton;
+  ImageView status_image;
+  TextView drawer_username;
   EditText sendMessage;
   String passwordHash;
   public static MessageRecyclerViewAdapter messageAdapter;
@@ -85,6 +89,9 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
   //Chats status hash map
   public static HashMap<String, Integer> channel_status;
 
+  // user status
+  boolean status_val = true;
+
   //Chat variables
   static Commands cmd;
   String userName;
@@ -92,7 +99,6 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
 
   // create an arraylist of strings to store the users in a channel
   public static ArrayList<String> channelUserList = new ArrayList<>();
-
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -151,7 +157,11 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
     messageRecyclerView = (RecyclerView) findViewById(R.id.chat_messageContainer);
     addChannelButton = (ImageButton) findViewById(R.id.drawer_addChannel);
     userListTitle = (TextView) findViewById(R.id.drawer_userTitle);
+    status_image = (ImageView) findViewById(R.id.status_image);
+    drawer_username = (TextView) findViewById(R.id.drawer_username);
     LinearLayout loading = (LinearLayout)findViewById(R.id.loadingPanel);
+
+    status_image.setColorFilter(Color.GREEN);
 
     // HashMap that handles the messages by channels
     channels_messageList = new HashMap<String, ArrayList<MessageIRC>>();
@@ -190,6 +200,7 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
     cmd = new Commands(server.out);
 
     toolbar.setTitle(chatName);
+    drawer_username.setText(userName);
 
     //Listeners
     addChannelButton.setOnClickListener(v -> {
@@ -290,7 +301,6 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
                 String new_usernmae = m.getMsg();
                 // update list
                 channelUserList.remove(old_username);
-                channelUserList.add(userName);
                 // update hashmap
                 ArrayList<MessageIRC> temp = channels_messageList.get(old_username);
                 channels_messageList.remove(old_username);
@@ -298,6 +308,7 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
                 // update username if the command is from app's user
                 if(old_username.equals(userName)){
                   userName = new_usernmae;
+                  drawer_username.setText(userName);
                 }
                 return;
               }
@@ -436,6 +447,7 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
                 }
               }
 
+
               // Check JOIN, PART and QUIT message
               if(Arrays.asList(new String[]{"UJ", "UP", "UQ"}).contains(m.getMessage_type())){
                 // Update list of users in the channel
@@ -555,6 +567,8 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
 
   }
 
+
+
   public static String mention_user(MessageIRC m){
     String msg = m.getMsg();
     for (String name : channelUserList){
@@ -592,12 +606,9 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
   //If the user clicks on any element of the user list
   @Override
   public void onItemClickUser(View view, int position) {
-    System.out.println(channelUserList.get(position));
-
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-    builder.setTitle("User");
-    builder.setMessage(channelUserList.get(position));
+    builder.setTitle(channelUserList.get(position));
 
     builder.setPositiveButton("Message user", (dialog, which) -> {
       // Do nothing but close the dialog
@@ -632,6 +643,22 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
     });
     AlertDialog alert = builder.create();
     alert.show();
+  }
+
+  // change status away or online
+  public void change_status(View view){
+    if(status_val){
+      status_val = false;
+      status_image.setColorFilter(Color.RED);
+      // send server away
+      cmd.away("");
+    }
+    else{
+      status_val = true;
+      status_image.setColorFilter(Color.GREEN);
+      // send server back
+      cmd.back();
+    }
   }
 
   @Override
@@ -750,6 +777,7 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
 
     builder.show();
   }
+
 
 
 }
