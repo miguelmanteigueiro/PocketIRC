@@ -11,6 +11,9 @@ import android.os.StrictMode;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * Shows the confirm register screen of the application and manages registration
@@ -59,11 +62,6 @@ public class ConfirmRegisterActivity extends Activity{
     else{
       commandLabel.setText("Please type the command sent to "+i.getStringExtra("Email"));
     }
-    //server
-    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-    StrictMode.setThreadPolicy(policy);
-    server = new Server("irc.libera.chat",6667);
-    System.out.println(username);
   }
   /**
    * Send the command to the server to complete user registration, sending
@@ -74,11 +72,29 @@ public class ConfirmRegisterActivity extends Activity{
   public void confirmRegistration(View v){
     //transform username and passwords into strings
     String commandString=String.valueOf(command.getText());
-    String parsedCommand=parseCommand(commandString);
     //reset tint to default state
     command.setBackgroundTintList(this.getResources().getColorStateList(R.color.buttonright));
+
     //confirm registration
-    if(parsedCommand.equals("LOLNOOB")){
+    RegisterActivity.server.out.println("nickserv verify register " + " " + username + " " + commandString + " \r\n");
+
+    long startTime = System.nanoTime();
+    while(true){
+      // if is passed 20 second then abort
+      if(TimeUnit.NANOSECONDS.toSeconds(System.nanoTime() - startTime) > 20){
+        Toast toast = Toast.makeText(this, "Request time out!", Toast.LENGTH_SHORT);
+        toast.show();
+        break;
+      }
+      // nice
+      if(RegisterActivity.command_confirmation.get()){
+        Toast toast = Toast.makeText(this, "User" + username + "registered successfully!", Toast.LENGTH_SHORT);
+        toast.show();
+        break;
+      }
+    }
+
+    if(!RegisterActivity.command_confirmation.get()){
       //show error dialog
       command.setBackgroundTintList(this.getResources().getColorStateList(R.color.buttonwrong));
       AlertDialog.Builder builder=new AlertDialog.Builder(this);
@@ -86,14 +102,11 @@ public class ConfirmRegisterActivity extends Activity{
       Dialog dialog=builder.create();
       dialog.show();
     }
-    else{
-      //confirm registration
-      server.login(username,"",username, ":"+username);
-      server.send_message(parseCommand(commandString));
-      //go to login activity
-      Intent loginIntent=new Intent(this,LoginActivity.class);
-      startActivity(loginIntent);
-    }
+
+    //go to login activity
+    Intent loginIntent=new Intent(this,LoginActivity.class);
+    startActivity(loginIntent);
+
   }
   /**
    * Parses the command to the correct output

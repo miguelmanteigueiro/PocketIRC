@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -13,6 +14,12 @@ import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Shows the register screen of the application and manages registration
@@ -22,7 +29,8 @@ public class RegisterActivity extends Activity{
   //declare xml attributes
   EditText username,password,confirmPassword,email;
   //server
-  Server server;
+  static Server server;
+  static AtomicBoolean command_confirmation;
 
   //== methods ==
   /**
@@ -101,10 +109,85 @@ public class RegisterActivity extends Activity{
     if(canRegister){
       server.login(usernameString, "", usernameString, ":"+usernameString);
       server.send_message("nickserv register "+ passwordString +" "+emailString + " \r\n");
-      Intent confirmRegistrationIntent=new Intent(this,ConfirmRegisterActivity.class);
-      confirmRegistrationIntent.putExtra("Email",emailString);
-      confirmRegistrationIntent.putExtra("username",usernameString);
-      startActivity(confirmRegistrationIntent);
+
+      // Create a thread to listen for incoming messages
+      AtomicBoolean run = new AtomicBoolean(true);
+      AtomicBoolean success = new AtomicBoolean(false);
+      AtomicBoolean error = new AtomicBoolean(false);
+      command_confirmation = new AtomicBoolean(false);
+
+
+      AtomicBoolean finalRun = run;
+      Thread receive = new Thread(() -> {
+        while(finalRun.get()){
+          System.out.println("DEBUG");
+          try {
+            // it means it went good
+            String data = server.in.readLine();
+            if(data == null){
+              error.set(true);
+            }
+            else {
+              System.out.println(data);
+              // POSSIBLE REGISTRATION MESSAGES
+              if(data.contains("is now registered to")){
+                success.set(true);
+              }
+              if(data.contains("This nickname is registered.")){
+                error.set(true);
+              }
+              if(data.contains("has too many accounts registered")){
+                error.set(true);
+              }
+              // COMMAND CONFIRMATION MESSAGES
+              if(data.contains("has now been verified")){
+                command_confirmation.set(true);
+              }
+            }
+
+          } catch (Exception e) {
+            e.printStackTrace();
+          }
+        }
+      });
+      receive.start();
+
+      long startTime = System.nanoTime();
+      // Waits for the server response
+      while(true){
+        // if is passed 20 second then abort
+        if(TimeUnit.NANOSECONDS.toSeconds(System.nanoTime() - startTime) > 20){
+          Toast toast = Toast.makeText(this, "Request time out!", Toast.LENGTH_SHORT);
+          toast.show();
+          break;
+        }
+        if(success.get()){
+          Toast toast = Toast.makeText(this, "Email sent to " + emailString, Toast.LENGTH_SHORT);
+          toast.show();
+          break;
+        }
+        if(error.get()){
+          Toast toast = Toast.makeText(this, "Email or nickname already in use!", Toast.LENGTH_SHORT);
+          toast.show();
+          break;
+        }
+      }
+
+      if (error.get()){
+        Intent intentRepeat = new Intent(this, RegisterActivity.class);
+        startActivity(intentRepeat);
+        finish();
+      }
+      else{
+        Intent confirmRegistrationIntent=new Intent(this,ConfirmRegisterActivity.class);
+        confirmRegistrationIntent.putExtra("Email",emailString);
+        confirmRegistrationIntent.putExtra("username",usernameString);
+        startActivity(confirmRegistrationIntent);
+        finish();
+      }
+
+
+
     }
     else{
       //show error dialog
