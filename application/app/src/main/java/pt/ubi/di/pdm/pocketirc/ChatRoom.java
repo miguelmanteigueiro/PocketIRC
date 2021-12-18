@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextClock;
@@ -77,6 +78,9 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
   private ArrayList<String> chatsList;
   private ArrayList<String> privateChatsList;
   public static HashMap<String, ArrayList<MessageIRC>> channels_messageList;
+
+  //Chats status hash map
+  public static HashMap<String, Integer> channel_status;
 
   //Chat variables
   static Commands cmd;
@@ -152,6 +156,11 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
     channels_messageList.put(chatName,new ArrayList<>());
 
     channels_messageList.put("NickServ",new ArrayList<>());
+
+    // HashMap that handles the channels status
+    channel_status = new HashMap<>();
+    channel_status.put(chatName,0);
+    channel_status.put("NickServ",0);
 
     MessageIRC firstMessage = new MessageIRC();
     firstMessage.setRecipient(userName);
@@ -286,12 +295,16 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
                 channelUserList.clear();
                 // remove added chatname
                 chatsList.remove(chatName);
+                channel_status.remove(chatName);
                 // update new chatname
                 chatName = m.getChannel();
                 chatsList.add(chatName);
+                channel_status.put(chatName,0);
                 // update adapter
                 channelsAdapter = new ChannelsRecyclerViewAdapter(ChatRoom.this, chatsList);
                 channelsRecyclerView.setAdapter(channelsAdapter);
+
+
                 // update toolbar
                 toolbar.setTitle(chatName);
                 // show toast to advice the user that have been forward
@@ -302,6 +315,7 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
               if(m.getAction().equals("KICK") && m.getMsg().equals(userName)){
                 chatsList.remove(m.getChannel());
                 channels_messageList.remove(m.getChannel());
+                channel_status.remove(m.getChannel());
                 if(m.getChannel().equals(chatName)){
                   chatName = "NickServ";
                   toolbar.setTitle(chatName);
@@ -363,8 +377,11 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
                 // Add user message to privateChatsList
                 if(!privateChatsList.contains(channel)){
                   privateChatsList.add(channel);
+                  //Update status
+                  channel_status.put(channel,1);
                   privMessagesAdapter = new ChannelsRecyclerViewAdapter(ChatRoom.this, privateChatsList);
                   privMessagesRecyclerView.setAdapter(privMessagesAdapter);
+
                 }
               }
 
@@ -391,6 +408,19 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
                 // Add message to the list
                 channels_messageList.get(channel).add(0, m);
 
+                if(!channel.equals(chatName)){
+                  channel_status.put(channel,1);
+                  //Atualizar lista
+                  if(channel.charAt(0) == '#'){
+                    channelsAdapter = new ChannelsRecyclerViewAdapter(ChatRoom.this, chatsList);
+                    channelsRecyclerView.setAdapter(channelsAdapter);
+                  }
+                  else {
+                    privMessagesAdapter = new ChannelsRecyclerViewAdapter(ChatRoom.this, privateChatsList);
+                    privMessagesRecyclerView.setAdapter(privMessagesAdapter);
+                  }
+
+                }
               }
 
               // Check JOIN, PART and QUIT message
@@ -532,6 +562,7 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
   @Override
   public void onItemClickUser(View view, int position) {
     System.out.println(channelUserList.get(position));
+
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
     builder.setTitle("User");
@@ -670,6 +701,9 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
           messageAdapter = new MessageRecyclerViewAdapter(ChatRoom.this, channels_messageList.get(chatName));
           messageRecyclerView.setAdapter(messageAdapter);
           messageAdapter.setClickListener(ChatRoom.this);
+
+          //updates status list
+          channel_status.put(chatName,0);
 
           drawerLayout.closeDrawer(leftDrawer);
         }

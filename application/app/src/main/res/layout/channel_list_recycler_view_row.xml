@@ -19,6 +19,13 @@
         android:singleLine="false"
         android:textSize="18sp"/>
 
+    <ImageView
+        android:id="@+id/channel_row_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="10"
+        app:srcCompat="@drawable/ic_baseline_brightness_1_24" />
+
     <ImageButton
         android:id="@+id/channel_row_remove"
         android:layout_width="wrap_content"

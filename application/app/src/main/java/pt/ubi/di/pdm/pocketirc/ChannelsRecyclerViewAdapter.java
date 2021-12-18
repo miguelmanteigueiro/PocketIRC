@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
@@ -37,6 +38,13 @@ public class ChannelsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
         ((ViewHolder)holder).typeTextView.setText(mData.get(position));
 
+        if(ChatRoom.channel_status.get(mData.get(position)) == 1){
+            ((ViewHolder)holder).status.setVisibility(View.VISIBLE);
+        }
+        else{
+            ((ViewHolder)holder).status.setVisibility(View.INVISIBLE);
+        }
+
         if(mData.get(position).equals("NickServ"))
         {
             ((ViewHolder)holder).remove.setVisibility(View.GONE);
@@ -49,6 +57,10 @@ public class ChannelsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
                 //Update the current chat
                 ChatRoom.chatName = mData.get(holder.getAdapterPosition());
+
+                //Updates roomStatus
+                ChatRoom.channel_status.put(mData.get(holder.getAdapterPosition()),0);
+                notifyItemChanged(holder.getAdapterPosition());
 
                 // Update message Adapter
                 messageAdapter = new MessageRecyclerViewAdapter(v.getContext(), ChatRoom.channels_messageList.get(ChatRoom.chatName));
@@ -100,6 +112,10 @@ public class ChannelsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
         }
         System.out.println(mData.get(position));
         ChatRoom.cmd.part(mData.get(position),"User left");
+
+        //Update statusList
+        ChatRoom.channel_status.remove(mData.get(position));
+
         ChatRoom.channels_messageList.remove(mData.get(position));
         mData.remove(position);
         notifyItemRemoved(position);
@@ -109,11 +125,13 @@ public class ChannelsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         TextView typeTextView;
         ImageButton remove;
+        ImageView status;
 
         ViewHolder(View itemView) {
             super(itemView);
             typeTextView = itemView.findViewById(R.id.channel_row_title);
             remove = itemView.findViewById(R.id.channel_row_remove);
+            status = itemView.findViewById(R.id.channel_row_status);
 
             remove.setOnClickListener(ViewHolder.this);
         }
