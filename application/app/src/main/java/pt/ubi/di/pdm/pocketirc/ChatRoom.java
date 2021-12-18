@@ -287,6 +287,37 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
 
               }
 
+              if(m.getAction().equals("KICK") && m.getMsg().equals(userName)){
+                chatsList.remove(m.getChannel());
+                channels_messageList.remove(m.getChannel());
+                if(m.getChannel().equals(chatName)){
+                  chatName = "NickServ";
+                  toolbar.setTitle(chatName);
+                  messageAdapter = new MessageRecyclerViewAdapter(getApplicationContext(), channels_messageList.get(chatName));
+                  messageRecyclerView.setAdapter(messageAdapter);
+                  messageAdapter.setClickListener(ChatRoom.this);
+
+                  AlertDialog.Builder builder = new AlertDialog.Builder(ChatRoom.this);
+
+                  builder.setTitle("Server status");
+                  builder.setMessage("You've been kicked from "+ m.getChannel() + "\n\nMoving to Nickserv");
+
+                  builder.setPositiveButton("Ok", (dialog, which) -> {
+                    // Do nothing but close the dialog
+                    dialog.dismiss();
+                  });
+                  AlertDialog alert = builder.create();
+                  alert.show();
+
+                }
+                else{
+                  Toast.makeText(ChatRoom.this, "You've been kicked from " + m.getChannel(), Toast.LENGTH_SHORT).show();
+                }
+                channelsAdapter = new ChannelsRecyclerViewAdapter(ChatRoom.this, chatsList);
+                channelsRecyclerView.setAdapter(channelsAdapter);
+
+              }
+
               // check if code = 353 (same as NAMES), so we can get the list of users in the channel
               if(m.getCode() == 353){
                 channelUserList.addAll(Arrays.asList(m.getMsg().split(" ")));
