@@ -42,6 +42,8 @@ import java.util.Calendar;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAdapter.ItemClickListener, UsersRecyclerViewAdapter.ItemClickListenerUser{
 
@@ -433,21 +435,16 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
   }
 
   public static String mention_user(MessageIRC m){
-    String[] tempMessageSplit = m.getMsg().split(" ");
+    String msg = m.getMsg();
     for (String name : channelUserList){
-      for(String word : tempMessageSplit){
-        if(word.contains(name) || ("@" + word).contains(name)){
-          tempMessageSplit[Arrays.asList(tempMessageSplit).indexOf(word)] = "<font color='#EE0000'>" + word + "</font>";
-        }
+      Pattern pattern = Pattern.compile(name);
+      Matcher matcher = pattern.matcher(msg);
+      while (matcher.find()) {
+        msg = msg.replace(name, "<font color=\"red\">" + name + "</font>");
       }
     }
 
-    StringBuilder s = new StringBuilder();
-    for (String word : tempMessageSplit){
-      s.append(word + " ");
-    }
-
-    return s.toString().trim();
+    return msg;
   }
 
   //Verifies if a string is made entirely of blank spaces
