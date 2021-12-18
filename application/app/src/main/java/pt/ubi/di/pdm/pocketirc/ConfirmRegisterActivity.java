@@ -108,17 +108,4 @@ public class ConfirmRegisterActivity extends Activity{
     startActivity(loginIntent);
 
   }
-  /**
-   * Parses the command to the correct output
-   * @param command the command to parse
-   * @return the parsed command
-   */
-  private String parseCommand(String command){
-    try{
-      return "nickserv verify register"+command.split(" ")[4]+command.split(" ")[5]+" \r\n";
-    }
-    catch(Exception err){
-      return "LOLNOOB";
-    }
-  }
 }

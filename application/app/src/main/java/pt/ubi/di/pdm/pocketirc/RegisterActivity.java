@@ -173,7 +173,7 @@ public class RegisterActivity extends Activity{
         }
       }
 
-      if (error.get()){
+      if (!success.get()){
         Intent intentRepeat = new Intent(this, RegisterActivity.class);
         startActivity(intentRepeat);
         finish();
@@ -185,8 +185,6 @@ public class RegisterActivity extends Activity{
         startActivity(confirmRegistrationIntent);
         finish();
       }
-
-
 
     }
     else{
