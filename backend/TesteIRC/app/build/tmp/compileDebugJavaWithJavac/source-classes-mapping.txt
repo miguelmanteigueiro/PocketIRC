@@ -1,0 +1,30 @@
+pt/ubi/di/pdm/teste/MessageRecyclerViewAdapter.java
+ pt.ubi.di.pdm.teste.MessageRecyclerViewAdapter
+ pt.ubi.di.pdm.teste.MessageRecyclerViewAdapter$EnterLeaveViewHolder
+ pt.ubi.di.pdm.teste.MessageRecyclerViewAdapter$ItemClickListener
+ pt.ubi.di.pdm.teste.MessageRecyclerViewAdapter$MessageViewHolder
+ pt.ubi.di.pdm.teste.MessageRecyclerViewAdapter$UserViewHolder
+pt/ubi/di/pdm/teste/Parser.java
+ pt.ubi.di.pdm.teste.Parser
+pt/ubi/di/pdm/teste/Prototype.java
+ Prototype
+pt/ubi/di/pdm/teste/MessageIRC.java
+ pt.ubi.di.pdm.teste.MessageIRC
+pt/ubi/di/pdm/teste/Server.java
+ pt.ubi.di.pdm.teste.Server
+pt/ubi/di/pdm/teste/BuildConfig.java
+ pt.ubi.di.pdm.teste.BuildConfig
+pt/ubi/di/pdm/teste/Commands.java
+ pt.ubi.di.pdm.teste.Commands
+pt/ubi/di/pdm/teste/ChannelsRecyclerViewAdapter.java
+ pt.ubi.di.pdm.teste.ChannelsRecyclerViewAdapter
+ pt.ubi.di.pdm.teste.ChannelsRecyclerViewAdapter$1
+ pt.ubi.di.pdm.teste.ChannelsRecyclerViewAdapter$ViewHolder
+pt/ubi/di/pdm/teste/MainActivity.java
+ pt.ubi.di.pdm.teste.MainActivity
+ pt.ubi.di.pdm.teste.MainActivity$1
+pt/ubi/di/pdm/teste/ChatRoom.java
+ pt.ubi.di.pdm.teste.ChatRoom
+ pt.ubi.di.pdm.teste.ChatRoom$1
+ pt.ubi.di.pdm.teste.ChatRoom$2
+ pt.ubi.di.pdm.teste.ChatRoom$2$1

@@ -4,7 +4,7 @@ public class Main {
         Server server = new Server("irc.libera.chat", 6667);
         String nick = "userheni";
         server.login(nick, "", nick, ":garfadaDeSopa");
-        server.join("#heni");
+        server.join("#kotlin");
 
         // Create a thread to listen for incoming messages
         Thread receive = new Thread(() -> {

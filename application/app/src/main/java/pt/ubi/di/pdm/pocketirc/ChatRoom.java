@@ -272,22 +272,9 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
           }
           //forward to another channel
           if(m.getCode()==470){
-            //clean channel user list
-            channelUserList.clear();
-            //remove added chatname
-            chatsList.remove(chatName);
-            channel_status.remove(chatName);
-            //update new chatname
-            chatName = m.getChannel();
-            chatsList.add(chatName);
-            channel_status.put(chatName,0);
-            //update adapter
-            channelsAdapter=new ChannelsRecyclerViewAdapter(ChatRoom.this,chatsList);
-            channelsRecyclerView.setAdapter(channelsAdapter);
-            //update toolbar
-            toolbar.setTitle(chatName);
-            //show toast to advice the user that have been forward
-            Toast.makeText(ChatRoom.this,"You have been forward to " + chatName, Toast.LENGTH_SHORT).show();
+            changeChannel(m.getChannel());
+            //show toast to tell the user he was forwarded
+            Toast.makeText(ChatRoom.this,"You have been forwarded to " + chatName, Toast.LENGTH_SHORT).show();
           }
           //manage kicks
           if(m.getAction().equals("KICK")&&m.getMsg().equals(userName)){
@@ -333,6 +320,13 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
             cmd.join(chatName,"");
             Toast.makeText(ChatRoom.this,"Username already taken! Using " + s, Toast.LENGTH_SHORT).show();
             return;
+          }
+          // if channel requires user to be logged in, redirect to #libera
+          if(m.getCode()==477){
+            changeChannel("#libera");
+            cmd.join(chatName, "");
+            //show toast to tell the user he was forwarded
+            Toast.makeText(ChatRoom.this, "You need to be logged in to join this channel! Forwarding to #libera", Toast.LENGTH_SHORT).show();
           }
           String channel=m.getChannel();
           if(channel.equals("")){
@@ -724,5 +718,22 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
     });
     builder.setNegativeButton("CANCEL",(dialogInterface,i)->dialogInterface.dismiss());
     builder.show();
+  }
+
+  public void changeChannel(String channelName){
+    //clean channel user list
+    channelUserList.clear();
+    //remove added chatname
+    chatsList.remove(chatName);
+    channel_status.remove(chatName);
+    //update new chatname
+    chatName = channelName;
+    chatsList.add(chatName);
+    channel_status.put(chatName,0);
+    //update adapter
+    channelsAdapter=new ChannelsRecyclerViewAdapter(ChatRoom.this,chatsList);
+    channelsRecyclerView.setAdapter(channelsAdapter);
+    //update toolbar
+    toolbar.setTitle(chatName);
   }
 }
