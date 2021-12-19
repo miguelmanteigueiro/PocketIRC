@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
@@ -124,7 +125,7 @@ public class MessageRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     else if (holder instanceof EnterLeaveViewHolder) {
       if(mData.get(position).getAction().equals("JOIN"))
-        ((EnterLeaveViewHolder) holder).elTextView.setTextColor(Color.BLUE);
+        ((EnterLeaveViewHolder) holder).elTextView.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.toolBar));
       else
         ((EnterLeaveViewHolder) holder).elTextView.setTextColor(Color.RED);
 

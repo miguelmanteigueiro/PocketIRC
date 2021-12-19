@@ -26,7 +26,7 @@ public class LoginActivity extends Activity{
   //declare xml attributes
   TextView passwordLabel;
   EditText username,password,channel;
-  CheckBox passwordCheck;
+  static CheckBox passwordCheck;
   Space space;
   Button loginButton;
 

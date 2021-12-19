@@ -74,9 +74,9 @@
                     android:id="@+id/switch2"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:background="?attr/colorPrimary"
                     android:layout_weight="1"
-                    android:drawableEnd="@drawable/ic_baseline_message_24"
+                    android:background="?attr/colorPrimary"
+                    android:drawableEnd="@drawable/ic_baseline_person_24"
                     android:drawableTint="@color/white" />
 
             </LinearLayout>

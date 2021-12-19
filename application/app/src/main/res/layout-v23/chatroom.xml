@@ -26,9 +26,10 @@
             <ProgressBar
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:indeterminate="true" />
+                android:indeterminate="false" />
 
             <TextView
+                android:id="@+id/loading_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -74,9 +75,9 @@
                     android:id="@+id/switch2"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:background="?attr/colorPrimary"
                     android:layout_weight="1"
-                    android:drawableEnd="@drawable/ic_baseline_message_24"
+                    android:background="?attr/colorPrimary"
+                    android:drawableEnd="@drawable/ic_baseline_person_24"
                     android:drawableTint="@color/white" />
 
             </LinearLayout>
@@ -102,7 +103,7 @@
                     android:layout_gravity="bottom"
                     android:layout_weight="1"
                     android:orientation="vertical"
-                    android:background="#fcf3e8"
+                    android:background="#65DFD3C3"
                     app:stackFromEnd="true"
                     tools:layout_editor_absoluteX="77dp">
 

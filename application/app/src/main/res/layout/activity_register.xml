@@ -206,37 +206,25 @@
             android:weightSum="2"
             android:layout_weight="1"
             android:gravity="center"
+            android:background="@color/toolBar"
             android:orientation="horizontal">
 
             <!--login button-->
             <Button
                 android:id="@+id/login"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center|center_vertical"
+                android:background="@color/toolBar"
                 android:text="@string/take_me_to_login"
                 android:textSize="15sp"
                 android:fontFamily="sans-serif-medium"
                 android:textColor="@color/white"
-                android:background="#6c5ce7"
                 android:onClick="login"
                 tools:ignore="ButtonStyle,NestedWeights,UsingOnClickInXml"/>
 
-            <!--command button-->
-            <Button
-                android:id="@+id/command"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center|center_vertical"
-                android:text="@string/i_have_a_command"
-                android:textSize="15sp"
-                android:fontFamily="sans-serif-medium"
-                android:textColor="@color/white"
-                android:background="#6c5ce7"
-                android:onClick="goCommand"
-                tools:ignore="ButtonStyle,NestedWeights,UsingOnClickInXml"/>
+
         </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -9,4 +9,8 @@
     <color name="white">#FFFFFFFF</color>
     <color name="coolGreen">#10ac84</color>
     <color name="coolRed">#ee5253</color>
+    <color name="toolBar">#596E79</color>
+    <color name="userBar">#C7B198</color>
+    <color name="sectionBar">#DFD3C3</color>
+    <color name="chatRoomColor">#DFD3C3</color>
 </resources>

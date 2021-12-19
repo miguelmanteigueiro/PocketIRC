@@ -4,7 +4,11 @@ package pt.ubi.di.pdm.pocketirc;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.StrictMode;
 import android.text.InputType;
 import android.view.Gravity;
@@ -19,6 +23,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.Lifecycle;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -52,6 +57,7 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
   RecyclerView channelsRecyclerView;
   RecyclerView privMessagesRecyclerView;
   RecyclerView userRecyclerView;
+  TextView loadingText;
   public static MessageRecyclerViewAdapter messageAdapter;
   public static RecyclerView messageRecyclerView;
   @SuppressLint("StaticFieldLeak")
@@ -115,11 +121,22 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
     status_image=findViewById(R.id.status_image);
     drawer_username=findViewById(R.id.drawer_username);
     LinearLayout loading=findViewById(R.id.loadingPanel);
+    loadingText = findViewById(R.id.loading_text);
+
     //intents
     Intent fromLogin=getIntent();
     userName=fromLogin.getStringExtra("username");
     chatName=fromLogin.getStringExtra("channel");
     passwordHash=fromLogin.getStringExtra("password");
+
+    //Loading screen treatment
+    Handler handler = new Handler();
+    handler.postDelayed(new Runnable() {
+      public void run() {
+        loadingText.setText("Loading chatroom...");
+      }
+    }, 3500);
+
     //listeners
     leftHamburger.setOnClickListener(v->drawerLayout.openDrawer(leftDrawer));
     rightHamburger.setOnClickListener(v->{
@@ -553,6 +570,10 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
     builder.setPositiveButton("Message user",(dialog,which)->{
       //do nothing but close the dialog
       chatName=channelUserList.get(position);
+
+      if(chatName.charAt(0) == '@'){
+        chatName = chatName.substring(1);
+      }
       drawerLayout.closeDrawer(rightDrawer);
       if(!privateChatsList.contains(chatName)){
         privateChatsList.add(chatName);
@@ -613,6 +634,7 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
     builder.setMessage("Are you sure?");
     builder.setPositiveButton("YES",(dialog, which)->{
       // Do nothing but close the dialog
+      //LoginActivity.passwordCheck.setChecked(true); //to uncheck
       finish();
       System.exit(0);
       dialog.dismiss();
@@ -638,7 +660,7 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
     AlertDialog.Builder builder=new AlertDialog.Builder(this);
     TextView title=new TextView(this);
     title.setText("Add channel/user");
-    title.setBackgroundColor(Color.DKGRAY);
+    title.setBackgroundColor(ContextCompat.getColor(this,R.color.toolBar));
     title.setPadding(10, 10, 10, 10);
     title.setGravity(Gravity.CENTER);
     title.setTextColor(Color.WHITE);
@@ -653,7 +675,6 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
     layout.setOrientation(LinearLayout.VERTICAL);
     layout.setPadding(0,20,0,20);
     builder.setView(layout);
-    //🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹🩹
     // Dialog box "OK" button
     builder.setPositiveButton("OK",(dialog,i)->{
       String aux=user_input.getText().toString();
