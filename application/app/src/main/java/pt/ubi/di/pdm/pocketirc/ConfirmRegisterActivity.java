@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.util.concurrent.TimeUnit;
+import pt.ubi.di.pdm.pocketirc.RegisterActivity;
 
 /**
  * Shows the confirm register screen of the application and manages registration
@@ -96,6 +97,7 @@ public class ConfirmRegisterActivity extends Activity{
       dialog.show();
     }
     //go to login activity
+    RegisterActivity.receive.destroy();
     Intent loginIntent=new Intent(this,LoginActivity.class);
     startActivity(loginIntent);
   }

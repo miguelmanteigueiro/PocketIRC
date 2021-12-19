@@ -17,7 +17,12 @@
         <entry key="..\:/Users/duart/Documents/uni/android/groupPracticalWork/PocketIRC/application/app/src/main/res/layout/chatroom.xml" value="0.35733695652173914" />
         <entry key="..\:/Users/duart/Documents/uni/android/groupPracticalWork/PocketIRC/application/app/src/main/res/layout/join_leave_recycler_view_row.xml" value="0.35733695652173914" />
         <entry key="..\:/Users/duart/Documents/uni/android/groupPracticalWork/PocketIRC/application/app/src/main/res/layout/left_drawer.xml" value="0.29739583333333336" />
+        <entry key="..\:/Users/duart/Documents/uni/android/groupPracticalWork/PocketIRC/application/app/src/main/res/layout/message_recycler_view_row.xml" value="0.3473731884057971" />
+        <entry key="..\:/Users/duart/Documents/uni/android/groupPracticalWork/PocketIRC/application/app/src/main/res/layout/navigation_header.xml" value="0.3473731884057971" />
+        <entry key="..\:/Users/duart/Documents/uni/android/groupPracticalWork/PocketIRC/application/app/src/main/res/layout/navigation_header2.xml" value="0.3473731884057971" />
+        <entry key="..\:/Users/duart/Documents/uni/android/groupPracticalWork/PocketIRC/application/app/src/main/res/layout/notices_recycler_view_row.xml" value="0.3473731884057971" />
         <entry key="..\:/Users/duart/Documents/uni/android/groupPracticalWork/PocketIRC/application/app/src/main/res/layout/right_drawer.xml" value="0.3302083333333333" />
+        <entry key="..\:/Users/duart/Documents/uni/android/groupPracticalWork/PocketIRC/application/app/src/main/res/layout/user_recycler_view_row.xml" value="0.3473731884057971" />
         <entry key="app/src/main/res/layout/chatroom.xml" value="0.19322916666666667" />
         <entry key="app/src/main/res/layout/left_drawer.xml" value="0.33" />
       </map>

@@ -86,11 +86,11 @@ public class LoginActivity extends Activity{
     password.setBackgroundTintList(this.getResources().getColorStateList(R.color.buttonright));
     //check parameters
     boolean canLogIn=true;
-    if(!checkString(usernameString)){
+    if(!checkString(usernameString)||Character.isDigit(usernameString.charAt(0))){
       canLogIn=false;
       username.setBackgroundTintList(this.getResources().getColorStateList(R.color.buttonwrong));
       username.setText("");
-      username.setHint("Nick must not be empty!");
+      username.setHint("No empty or number start nick!");
     }
     if(requiresPassword){
       if(!checkString(passwordString)){
@@ -103,11 +103,11 @@ public class LoginActivity extends Activity{
     channelString=formatChannel(channelString);
     //log in
     if(canLogIn){
-        Intent chatIntent=new Intent(this,ChatRoom.class); //uncomment
-        chatIntent.putExtra("username",usernameString); //uncomment
-        chatIntent.putExtra("password",passwordString); //uncomment
-        chatIntent.putExtra("channel",channelString); //uncomment
-        startActivity(chatIntent); //uncomment
+        Intent chatIntent=new Intent(this,ChatRoom.class);
+        chatIntent.putExtra("username",usernameString);
+        chatIntent.putExtra("password",passwordString);
+        chatIntent.putExtra("channel",channelString);
+        startActivity(chatIntent);
     }
     else{
       //show error dialog

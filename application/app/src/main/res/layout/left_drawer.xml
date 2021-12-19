@@ -49,22 +49,23 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#c7ecee"
+        android:background="#8A54A0FF"
         android:weightSum="3"
         android:orientation="horizontal"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:padding="5dp">
 
         <TextView
             android:id="@+id/drawer_channelsTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_gravity="center"
             android:textColor="@color/black"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:text="@string/channels"
             tools:ignore="NestedWeights"
-            android:textAlignment="center"/>
+            android:textAlignment="textStart"
+            android:layout_marginStart="10dp"/>
 
         <Space
             android:layout_width="match_parent"
@@ -89,20 +90,28 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:background="#c7ecee"
-        android:minHeight="50dp"
         android:layout_height="wrap_content"
+        android:background="#8A54A0FF"
         android:orientation="horizontal"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:weightSum="2"
+        android:padding="5dp">
 
         <TextView
             android:id="@+id/drawer_messagesTitle"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_weight="1"
             android:textColor="@color/black"
-            android:textSize="20sp"
-            android:text="Private messages" />
+            android:textSize="18sp"
+            android:text="@string/private_messages"
+            tools:ignore="NestedWeights"
+            android:textAlignment="textStart"
+            android:layout_marginStart="10dp"/>
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView

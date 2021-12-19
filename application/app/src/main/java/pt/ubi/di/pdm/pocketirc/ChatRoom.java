@@ -40,7 +40,7 @@ import java.util.regex.Pattern;
 public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAdapter.ItemClickListener,UsersRecyclerViewAdapter.ItemClickListenerUser{
   //== attributes ==
   //declare xml attributes
-  ImageButton sendButton;
+  ImageView sendButton;
   ImageView status_image;
   TextView drawer_username;
   EditText sendMessage;
@@ -305,10 +305,12 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
           //check if code is 433
           if(m.getCode()==433){
             String s=generate_name(userName);
+            drawer_username.setText(s);
             cmd.nick(s);
             userName=s;
             cmd.join(chatName,"");
             Toast.makeText(ChatRoom.this,"Username already taken! Using " + s, Toast.LENGTH_SHORT).show();
+            return;
           }
           String channel=m.getChannel();
           if(channel.equals("")){
@@ -470,17 +472,20 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
    */
   public static String mention_user(MessageIRC m){
     String msg=m.getMsg();
-    for (String name:channelUserList){
-      Pattern pattern=Pattern.compile(name);
-      Matcher matcher=pattern.matcher(msg);
-      while (matcher.find()) {
-        msg=msg.replace(name,"<font color=\"red\">" + name + "</font>");
+    StringBuilder newMsg=new StringBuilder();
+    for(String msgSubstring:msg.split(" ")){
+      if(msgSubstring.length()==0){
+        break;
+      }
+      if(channelUserList.contains(msgSubstring)||(channelUserList.contains(msgSubstring.substring(0,msgSubstring.length()-1))&&msgSubstring.charAt(msgSubstring.length()-1)==':')){
+        newMsg.append("<font color=\"red\">").append(msgSubstring).append(" ").append("</font>");
+      }
+      else{
+        newMsg.append(msgSubstring).append(" ");
       }
     }
-    return msg;
+    return newMsg.toString();
   }
-  //Verifies if a string is made entirely of blank spaces
-
   /**
    * Verifies if a string is made entirely of blank spaces
    * @param cs the given string

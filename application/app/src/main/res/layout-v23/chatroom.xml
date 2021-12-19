@@ -129,15 +129,18 @@
                         android:hint="@string/type_your_message"
                         android:minHeight="48dp"
                         android:importantForAutofill="no"
-                        android:inputType="text" />
+                        android:inputType="text"
+                        android:padding="5dp"/>
 
-                    <ImageButton
+                    <ImageView
                         android:id="@+id/chat_sendButton"
                         android:layout_width="0dp"
                         android:layout_height="fill_parent"
                         android:layout_weight="1"
-                        android:src="@android:drawable/ic_menu_send"
-                        android:contentDescription="@string/send_button"/>
+                        android:src="@drawable/send"
+                        android:contentDescription="@string/send_button"
+                        android:scaleX=".5"
+                        android:scaleY=".5"/>
                 </LinearLayout>
             </LinearLayout>
 

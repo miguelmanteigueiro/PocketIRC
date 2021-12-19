@@ -27,6 +27,8 @@ public class RegisterActivity extends Activity{
   //server
   static Server server;
   static AtomicBoolean command_confirmation;
+  public static AtomicBoolean run;
+  public static Thread receive;
 
   //== methods ==
   /**
@@ -71,11 +73,11 @@ public class RegisterActivity extends Activity{
     email.setBackgroundTintList(this.getResources().getColorStateList(R.color.buttonright));
     //check parameters
     boolean canRegister=true;
-    if(!checkString(usernameString)){
+    if(!checkString(usernameString)||Character.isDigit(usernameString.charAt(0))){
       canRegister=false;
       username.setBackgroundTintList(this.getResources().getColorStateList(R.color.buttonwrong));
       username.setText("");
-      username.setHint("Nick must not be empty!");
+      username.setHint("No empty or number start nick!");
     }
     if(!checkString(passwordString)){
       canRegister=false;
@@ -103,19 +105,20 @@ public class RegisterActivity extends Activity{
       server.login(usernameString, "", usernameString, ":"+usernameString);
       server.send_message("nickserv register "+ passwordString +" "+emailString + " \r\n");
       //Create a thread to listen for incoming messages
-      AtomicBoolean run=new AtomicBoolean(true);
+      run=new AtomicBoolean(true);
       AtomicBoolean success=new AtomicBoolean(false);
       AtomicBoolean error=new AtomicBoolean(false);
       command_confirmation=new AtomicBoolean(false);
-      Thread receive=new Thread(()->{
+      receive=new Thread(()->{
         while(run.get()){
           try{
             //it went good
             String data=server.in.readLine();
+            System.out.println("!!!!"+data);
             if(data==null){
               error.set(true);
             }
-            else {
+            else{
               //POSSIBLE REGISTRATION MESSAGES
               if(data.contains("is now registered to")){
                 success.set(true);
@@ -159,9 +162,9 @@ public class RegisterActivity extends Activity{
         }
       }
       if(!success.get()){
+        finish();
         Intent intentRepeat=new Intent(this,RegisterActivity.class);
         startActivity(intentRepeat);
-        finish();
       }
       else{
         Intent confirmRegistrationIntent=new Intent(this,ConfirmRegisterActivity.class);
