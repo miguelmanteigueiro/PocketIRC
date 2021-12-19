@@ -5,7 +5,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -15,9 +14,6 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import androidx.recyclerview.widget.RecyclerView;
-
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -52,13 +48,10 @@ public class RegisterActivity extends Activity{
     password.setText("");
     confirmPassword.setText("");
     email.setText("");
-
     //server
     StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
     StrictMode.setThreadPolicy(policy);
-
-    server = new Server("irc.libera.chat",6667);
-
+    server=new Server("irc.libera.chat",6667);
   }
   /**
    * Check if the parameters are correct and register the user
@@ -109,27 +102,21 @@ public class RegisterActivity extends Activity{
     if(canRegister){
       server.login(usernameString, "", usernameString, ":"+usernameString);
       server.send_message("nickserv register "+ passwordString +" "+emailString + " \r\n");
-
-      // Create a thread to listen for incoming messages
-      AtomicBoolean run = new AtomicBoolean(true);
-      AtomicBoolean success = new AtomicBoolean(false);
-      AtomicBoolean error = new AtomicBoolean(false);
-      command_confirmation = new AtomicBoolean(false);
-
-
-      AtomicBoolean finalRun = run;
-      Thread receive = new Thread(() -> {
-        while(finalRun.get()){
-          System.out.println("DEBUG");
-          try {
-            // it means it went good
-            String data = server.in.readLine();
-            if(data == null){
+      //Create a thread to listen for incoming messages
+      AtomicBoolean run=new AtomicBoolean(true);
+      AtomicBoolean success=new AtomicBoolean(false);
+      AtomicBoolean error=new AtomicBoolean(false);
+      command_confirmation=new AtomicBoolean(false);
+      Thread receive=new Thread(()->{
+        while(run.get()){
+          try{
+            //it went good
+            String data=server.in.readLine();
+            if(data==null){
               error.set(true);
             }
             else {
-              System.out.println(data);
-              // POSSIBLE REGISTRATION MESSAGES
+              //POSSIBLE REGISTRATION MESSAGES
               if(data.contains("is now registered to")){
                 success.set(true);
               }
@@ -139,42 +126,40 @@ public class RegisterActivity extends Activity{
               if(data.contains("has too many accounts registered")){
                 error.set(true);
               }
-              // COMMAND CONFIRMATION MESSAGES
+              //COMMAND CONFIRMATION MESSAGES
               if(data.contains("has now been verified")){
                 command_confirmation.set(true);
               }
             }
-
-          } catch (Exception e) {
+          }
+          catch(Exception e){
             e.printStackTrace();
           }
         }
       });
       receive.start();
-
-      long startTime = System.nanoTime();
+      long startTime=System.nanoTime();
       // Waits for the server response
       while(true){
-        // if is passed 20 second then abort
-        if(TimeUnit.NANOSECONDS.toSeconds(System.nanoTime() - startTime) > 20){
-          Toast toast = Toast.makeText(this, "Request time out!", Toast.LENGTH_SHORT);
+        // if 20 seconds have passed, then abort
+        if(TimeUnit.NANOSECONDS.toSeconds(System.nanoTime()-startTime)>20){
+          Toast toast = Toast.makeText(this,"Request time out!",Toast.LENGTH_SHORT);
           toast.show();
           break;
         }
         if(success.get()){
-          Toast toast = Toast.makeText(this, "Email sent to " + emailString, Toast.LENGTH_SHORT);
+          Toast toast=Toast.makeText(this,"Email sent to "+emailString,Toast.LENGTH_SHORT);
           toast.show();
           break;
         }
         if(error.get()){
-          Toast toast = Toast.makeText(this, "Email or nickname already in use!", Toast.LENGTH_SHORT);
+          Toast toast=Toast.makeText(this,"Email or nickname already in use!",Toast.LENGTH_SHORT);
           toast.show();
           break;
         }
       }
-
-      if (!success.get()){
-        Intent intentRepeat = new Intent(this, RegisterActivity.class);
+      if(!success.get()){
+        Intent intentRepeat=new Intent(this,RegisterActivity.class);
         startActivity(intentRepeat);
         finish();
       }
@@ -185,7 +170,6 @@ public class RegisterActivity extends Activity{
         startActivity(confirmRegistrationIntent);
         finish();
       }
-
     }
     else{
       //show error dialog

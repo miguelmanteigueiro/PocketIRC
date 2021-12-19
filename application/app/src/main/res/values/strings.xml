@@ -17,4 +17,11 @@
     <string name="confirm_registration">Confirm registration</string>
     <string name="command">Command</string>
     <string name="i_have_a_command">I have a command</string>
+    <string name="loading_chatroom">Loading chatroom...</string>
+    <string name="type_your_message">Type your message</string>
+    <string name="send_button">send button</string>
+    <string name="active_users">Active users</string>
+    <string name="username">Username</string>
+    <string name="plus">plus</string>
+    <string name="channels">Channels</string>
 </resources>

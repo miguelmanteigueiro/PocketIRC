@@ -1,5 +1,6 @@
 package pt.ubi.di.pdm.pocketirc;
 
+//imports
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,16 +9,14 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
-
 import java.util.ArrayList;
 
-import pt.ubi.di.pdm.pocketirc.ChatRoom;
-
 public class ChannelsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements MessageRecyclerViewAdapter.ItemClickListener{
-    private ArrayList<String> mData;
-    private LayoutInflater mInflater;
+    private final ArrayList<String> mData;
+    private final LayoutInflater mInflater;
     private MessageRecyclerViewAdapter messageAdapter;
 
     // data is passed into the constructor
@@ -27,15 +26,16 @@ public class ChannelsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
     }
 
     // inflates the row layout from xml when needed
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent,int viewType) {
         View view = mInflater.inflate(R.layout.channel_list_recycler_view_row, parent, false);
         return new ViewHolder(view);
     }
 
     // binds the data to the TextView in each row
     @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder,int position) {
         ((ViewHolder)holder).typeTextView.setText(mData.get(position));
 
         if(ChatRoom.channel_status.get(mData.get(position)) == 1){

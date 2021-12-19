@@ -48,15 +48,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:background="@drawable/button"
+                android:contentDescription="@string/help_symbol"
                 android:gravity="start|center_vertical"
+                android:onClick="help"
                 android:scaleX="0.6"
                 android:scaleY="0.6"
-                android:background="@drawable/button"
-                android:onClick="help"
                 android:textColor="@color/white"
                 app:srcCompat="@android:drawable/ic_menu_help"
-                android:contentDescription="@string/help_symbol"
-                tools:ignore="UsingOnClickInXml" />
+                tools:ignore="UsingOnClickInXml,ImageContrastCheck,TouchTargetSizeCheck" />
         </LinearLayout>
 
         <!--username-->
@@ -177,6 +177,7 @@
                 android:gravity="center"
                 android:importantForAutofill="no"
                 android:inputType="text"
+                android:minHeight="48dp"
                 android:textSize="15sp"
                 tools:ignore="DuplicateSpeakableTextCheck" />
         </LinearLayout>

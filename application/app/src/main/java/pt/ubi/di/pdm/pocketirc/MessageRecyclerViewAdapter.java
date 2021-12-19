@@ -1,5 +1,6 @@
 package pt.ubi.di.pdm.pocketirc;
 
+//imports
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
@@ -8,17 +9,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
-import java.math.BigInteger;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public class MessageRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
-  private List<MessageIRC> mData;
-  private LayoutInflater mInflater;
+  private final List<MessageIRC> mData;
+  private final LayoutInflater mInflater;
   private ItemClickListener mClickListener;
 
   // data is passed into the constructor
@@ -70,8 +68,9 @@ public class MessageRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
   }
 
   // inflates the row layout from xml when needed
+  @NonNull
   @Override
-  public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+  public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent,int viewType) {
     View view;
     final RecyclerView.ViewHolder holder;
 
@@ -110,7 +109,7 @@ public class MessageRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
   // binds the data to the TextView in each row
   @SuppressLint("SetTextI18n")
   @Override
-  public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
+  public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder,int position) {
     MessageIRC ap = mData.get(position);
     if (holder instanceof MessageViewHolder) {
       ((MessageViewHolder) holder).messageTextView.setText(Html.fromHtml(ap.getMsg()));
@@ -119,7 +118,7 @@ public class MessageRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     else if (holder instanceof UserViewHolder) {
       ((UserViewHolder) holder).userTextView.setText(ap.getUser()[0]);
       ((UserViewHolder) holder).userTextView.setTextColor(toColor(ap.getUser()[0]));
-      //Alterar cor de texto de utilizador aqui
+      //Swap text color
       ((UserViewHolder) holder).hourTextView.setText(ap.getHour());
     }
 
@@ -226,14 +225,14 @@ public class MessageRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
   private int toColor(String arg) {
     int sum = 0;
     for(char ch : arg.toCharArray())
-      sum += (int)ch;
+      sum +=ch;
 
-    Double rDouble = Double.valueOf("0." + String.valueOf(Math.sin(sum + 1)).substring(6)) * 256;
-    Double gDouble = Double.valueOf("0." + String.valueOf(Math.sin(sum + 2)).substring(6)) * 256;
-    Double bDouble = Double.valueOf("0." + String.valueOf(Math.sin(sum + 3)).substring(6)) * 256;
-    int r = rDouble.intValue();
-    int g = gDouble.intValue();
-    int b = bDouble.intValue();
+    double rDouble = Double.parseDouble("0." + String.valueOf(Math.sin(sum + 1)).substring(6)) * 256;
+    double gDouble = Double.parseDouble("0." + String.valueOf(Math.sin(sum + 2)).substring(6)) * 256;
+    double bDouble = Double.parseDouble("0." + String.valueOf(Math.sin(sum + 3)).substring(6)) * 256;
+    int r =(int)rDouble;
+    int g =(int)gDouble;
+    int b =(int)bDouble;
 
     return Color.rgb(r,g,b);
   }

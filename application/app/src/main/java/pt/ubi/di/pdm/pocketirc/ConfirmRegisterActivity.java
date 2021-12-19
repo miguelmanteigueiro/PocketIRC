@@ -7,12 +7,10 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -23,8 +21,6 @@ public class ConfirmRegisterActivity extends Activity{
   //declare xml attributes
   TextView commandLabel;
   EditText command;
-  //server
-  Server server;
   //username
   String username;
 
@@ -74,26 +70,23 @@ public class ConfirmRegisterActivity extends Activity{
     String commandString=String.valueOf(command.getText());
     //reset tint to default state
     command.setBackgroundTintList(this.getResources().getColorStateList(R.color.buttonright));
-
     //confirm registration
     RegisterActivity.server.out.println("nickserv verify register " + " " + username + " " + commandString + " \r\n");
-
     long startTime = System.nanoTime();
     while(true){
-      // if is passed 20 second then abort
-      if(TimeUnit.NANOSECONDS.toSeconds(System.nanoTime() - startTime) > 20){
-        Toast toast = Toast.makeText(this, "Request time out!", Toast.LENGTH_SHORT);
+      //if 20 seconds have passed, then abort
+      if(TimeUnit.NANOSECONDS.toSeconds(System.nanoTime()-startTime)>20){
+        Toast toast=Toast.makeText(this,"Request time out!",Toast.LENGTH_SHORT);
         toast.show();
         break;
       }
-      // nice
+      //confirmation of registration is successful
       if(RegisterActivity.command_confirmation.get()){
-        Toast toast = Toast.makeText(this, "User" + username + "registered successfully!", Toast.LENGTH_SHORT);
+        Toast toast = Toast.makeText(this, "User" + username + "registered successfully!",Toast.LENGTH_SHORT);
         toast.show();
         break;
       }
     }
-
     if(!RegisterActivity.command_confirmation.get()){
       //show error dialog
       command.setBackgroundTintList(this.getResources().getColorStateList(R.color.buttonwrong));
@@ -102,10 +95,8 @@ public class ConfirmRegisterActivity extends Activity{
       Dialog dialog=builder.create();
       dialog.show();
     }
-
     //go to login activity
     Intent loginIntent=new Intent(this,LoginActivity.class);
     startActivity(loginIntent);
-
   }
 }

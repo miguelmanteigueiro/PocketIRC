@@ -126,17 +126,18 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="5"
-                        android:hint="Mensagem aqui ok? ok."
-                        android:minHeight="48dp" />
+                        android:hint="@string/type_your_message"
+                        android:minHeight="48dp"
+                        android:importantForAutofill="no"
+                        android:inputType="text" />
 
                     <ImageButton
                         android:id="@+id/chat_sendButton"
                         android:layout_width="0dp"
                         android:layout_height="fill_parent"
                         android:layout_weight="1"
-                        android:src="@android:drawable/ic_menu_send" />
-
-
+                        android:src="@android:drawable/ic_menu_send"
+                        android:contentDescription="@string/send_button"/>
                 </LinearLayout>
             </LinearLayout>
 
@@ -167,5 +168,4 @@
         android:orientation="vertical">
         <include layout="@layout/right_drawer"/>
     </LinearLayout>
-
 </androidx.drawerlayout.widget.DrawerLayout>

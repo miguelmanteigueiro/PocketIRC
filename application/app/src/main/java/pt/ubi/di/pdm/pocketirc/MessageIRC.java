@@ -1,102 +1,200 @@
 package pt.ubi.di.pdm.pocketirc;
 
+//imports
+import androidx.annotation.NonNull;
+
 import java.util.Arrays;
 
-public class MessageIRC {
-  String server;
-  String channel;
-  String recipient;
-  String[] user;
-  String type;
-  String msg;
-  String action;
-  String hour;
-  // The message type can be:
-  // -Server Message (S)
-  // -Channel Message (C)
-  // -User Message (Message, JOIN, QUIT, PART) (UM) (UJ) (UQ) (UP)
-  // -NickServ Message (Appears on the chat and it is a NOTICE) (NS)
-  // -Ping (P)
-  String message_type;
-  int code;
+/**
+ * Represents an IRC message
+ */
+public class MessageIRC{
+  //== attributes ==
+  public String server;
+  public String channel;
+  public String recipient;
+  public String[] user;
+  public String type;
+  public String msg;
+  public String action;
+  public String hour;
+  public int code;
+  /**
+   * The message type can be:
+   *  -Server Message (S)
+   *  -Channel Message (C)
+   *  -User Message (Message, JOIN, QUIT, PART) (UM) (UJ) (UQ) (UP)
+   *  -NickServ Message (Appears on the chat and it is a NOTICE) (NS)
+   *  -Ping (P)
+   */
+  public String message_type;
 
+  //== constructors ==
+  /**
+   * Constructs an empty IRC message
+   */
   public MessageIRC(){
-    String server = "";
-    String channel = "";
-    String recipient = "";
-    String[] user = new String[3];
-    String type = "";
-    String msg = "";
-    String action = "";
-    String message_type = "";
-    int code = -1;
+    server = "";
+    channel = "";
+    recipient = "";
+    user = new String[3];
+    type = "";
+    msg = "";
+    action = "";
+    message_type = "";
+    code=-1;
   }
 
-  // Getters e setters
-  public String getAction()  {
+  //== methods ==
+  //Getters & Setters
+  /**
+   * Gets the action
+   * @return the action
+   */
+  public String getAction(){
     return action;
   }
-  public String getChannel() {
+  /**
+   * Gets the channel
+   * @return the channel
+   */
+  public String getChannel(){
     return channel;
   }
-  public int getCode() {
+  /**
+   * Gets the code
+   * @return the code
+   */
+  public int getCode(){
     return code;
   }
-  public String getMsg() {
+  /**
+   * Gets the msg
+   * @return the msg
+   */
+  public String getMsg(){
     return msg;
   }
-  public String getRecipient() {
+  /**
+   * Gets the recipient
+   * @return the recipient
+   */
+  public String getRecipient(){
     return recipient;
   }
-  public String getServer() {
+  /**
+   * Gets the server
+   * @return the server
+   */
+  public String getServer(){
     return server;
   }
-  public String getType() {
+  /**
+   * Gets the type
+   * @return the type
+   */
+  public String getType(){
     return type;
   }
-  public String[] getUser() {
+  /**
+   * Gets the user
+   * @return the user
+   */
+  public String[] getUser(){
     return user;
   }
-  public String getHour() {
+  /**
+   * Gets the hour
+   * @return the hour
+   */
+  public String getHour(){
     return hour;
   }
-  public String getMessage_type() {
+  /**
+   * Gets the message type
+   * @return the message type
+   */
+  public String getMessage_type(){
     return message_type;
   }
-
-  public void setAction(String action) {
-    this.action = action;
+  /**
+   * Sets the action to {@code action}
+   * @param action the specified action
+   */
+  public void setAction(String action){
+    this.action=action;
   }
-  public void setChannel(String channel) {
-    this.channel = channel;
+  /**
+   * Sets the channel to {@code channel}
+   * @param channel the specified channel
+   */
+  public void setChannel(String channel){
+    this.channel=channel;
   }
-  public void setCode(int code) {
-    this.code = code;
+  /**
+   * Sets the code to {@code code}
+   * @param code the specified code
+   */
+  public void setCode(int code){
+    this.code=code;
   }
-  public void setMsg(String msg) {
-    this.msg = msg;
+  /**
+   * Sets the msg to {@code msg}
+   * @param msg the specified msg
+   */
+  public void setMsg(String msg){
+    this.msg =msg;
   }
-  public void setRecipient(String recipient) {
-    this.recipient = recipient;
+  /**
+   * Sets the recipient to {@code recipient}
+   * @param recipient the specified recipient
+   */
+  public void setRecipient(String recipient){
+    this.recipient=recipient;
   }
-  public void setServer(String server) {
-    this.server = server;
+  /**
+   * Sets the server to {@code server}
+   * @param server the specified server
+   */
+  public void setServer(String server){
+    this.server=server;
   }
-  public void setType(String type) {
-    this.type = type;
+  /**
+   * Sets the type to {@code type}
+   * @param type the specified type
+   */
+  public void setType(String type){
+    this.type=type;
   }
-  public void setUser(String[] user) {
-    this.user = user;
+  /**
+   * Sets the user to {@code user}
+   * @param user the specified user
+   */
+  public void setUser(String[] user){
+    this.user=user;
   }
-  public void setHour(String hour) {
-    this.hour = hour;
+  /**
+   * Sets the hour to {@code hour}
+   * @param hour the specified hour
+   */
+  public void setHour(String hour){
+    this.hour=hour;
   }
-  public void setMessage_type(String message_type) {
-    this.message_type = message_type;
+  /**
+   * Sets the message type to {@code message_type}
+   * @param message_type the specified message type
+   */
+  public void setMessage_type(String message_type){
+    this.message_type=message_type;
   }
-
+  //to string
+  /**
+   * Gets the message as a string
+   * @return the message as a string
+   */
+  @NonNull
   @Override
-  public String toString() {
+  public String toString(){
     return "MessageIRC{" +
       "server='" + server + '\'' +
       ", channel='" + channel + '\'' +

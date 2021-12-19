@@ -1,39 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/main_right"
     android:background="@color/white">
 
-
     <LinearLayout
         android:layout_width="match_parent"
-        android:background="#0d80ba"
+        android:background="#eb4d4b"
         android:minHeight="50dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <TextView
             android:id="@+id/drawer_userTitle"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="10"
-            android:textStyle="bold"
             android:layout_gravity="center"
             android:textAlignment="center"
-            android:textSize="24sp"
-            android:text="Active users" />
+            android:fontFamily="sans-serif-black"
+            android:textSize="20sp"
+            android:textColor="@color/white"
+            android:text="@string/active_users"/>
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/drawer_user_list"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:scrollbarFadeDuration="0"
-        app:stackFromEnd="false"
-        android:layout_height="wrap_content" />
-
+        app:stackFromEnd="false" />
 </LinearLayout>

@@ -7,6 +7,7 @@
     android:background="@drawable/ic_splashscreen"
     tools:context=".MainActivity">
 
+    <!--Clickable element-->
     <TextView
         android:layout_width="0dp"
         android:layout_height="0dp"
