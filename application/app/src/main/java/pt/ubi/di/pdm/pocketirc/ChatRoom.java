@@ -521,6 +521,9 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
       if(!channels_messageList.containsKey(chatName)){
         channels_messageList.put(chatName,new ArrayList<>());
       }
+
+      channel_status.put(chatName,0);
+
       MessageIRC m=new MessageIRC();
       m.setRecipient(userName);
       m.setMsg("");
@@ -646,6 +649,7 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
         }
         toolbar.setTitle(aux);
         chatName=aux;
+        channelUserList.clear();
         if(!channels_messageList.containsKey(chatName)){
           channels_messageList.put(chatName,new ArrayList<>());
         }
