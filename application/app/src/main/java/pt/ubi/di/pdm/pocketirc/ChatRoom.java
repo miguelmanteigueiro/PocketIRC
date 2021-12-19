@@ -133,7 +133,12 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
     Handler handler = new Handler();
     handler.postDelayed(new Runnable() {
       public void run() {
-        loadingText.setText("Loading chatroom...");
+        try{
+          loadingText.setText("Loading chatroom...");
+        }
+        catch (Exception e){
+          e.printStackTrace();
+        }
       }
     }, 3500);
 
