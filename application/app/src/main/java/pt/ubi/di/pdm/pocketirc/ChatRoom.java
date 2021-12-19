@@ -247,6 +247,7 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
         runOnUiThread(()->{
           //message received from chat
           MessageIRC m=Parser.parse_message(finalMessage);
+          System.out.println("______>" + finalMessage);
           //send pong command when server send ping (to avoid timeouts)
           if(m.getMessage_type().equals("P")){
             cmd.pong();
@@ -733,10 +734,12 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
     channel_status.remove(chatName);
     //update new chatname
     chatName = channelName;
-    chatsList.add(chatName);
-    channel_status.put(chatName,0);
+    if(!chatsList.contains(channelName)) {
+      chatsList.add(chatName);
+    }
+    channel_status.put(chatName, 0);
     //update adapter
-    channelsAdapter=new ChannelsRecyclerViewAdapter(ChatRoom.this,chatsList);
+    channelsAdapter = new ChannelsRecyclerViewAdapter(ChatRoom.this, chatsList);
     channelsRecyclerView.setAdapter(channelsAdapter);
     //update toolbar
     toolbar.setTitle(chatName);

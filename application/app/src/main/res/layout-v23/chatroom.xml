@@ -22,12 +22,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:weightSum="10">
 
 
             <pl.droidsonroids.gif.GifImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="3"
                 android:src="@drawable/rex"
                 tools:ignore="MissingClass" />
 
@@ -36,9 +38,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
+                android:layout_weight="7"
                 android:gravity="center"
                 android:text="@string/loading_chatroom"
-                android:textSize="18sp"/>
+                android:textSize="18sp" />
 
         </LinearLayout>
 
