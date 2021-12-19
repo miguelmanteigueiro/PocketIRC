@@ -33,7 +33,7 @@ public class MessageRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     switch (mData.get(position).getMessage_type()){
       case "UJ" : mData.get(position).setMsg("<- " + mData.get(position).getUser()[1] + " joined");
         return R.layout.join_leave_recycler_view_row;
-      case "UQ" : mData.get(position).setMsg("<- " + mData.get(position).getUser()[1] + " quited");
+      case "UQ" : mData.get(position).setMsg("<- " + mData.get(position).getUser()[1] + " quitted");
         return R.layout.join_leave_recycler_view_row;
       case "UP" : mData.get(position).setMsg("<- " + mData.get(position).getUser()[1] + " left");
         return R.layout.join_leave_recycler_view_row;
@@ -124,7 +124,7 @@ public class MessageRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     else if (holder instanceof EnterLeaveViewHolder) {
       if(mData.get(position).getAction().equals("JOIN"))
-        ((EnterLeaveViewHolder) holder).elTextView.setTextColor(Color.GREEN);
+        ((EnterLeaveViewHolder) holder).elTextView.setTextColor(Color.BLUE);
       else
         ((EnterLeaveViewHolder) holder).elTextView.setTextColor(Color.RED);
 
