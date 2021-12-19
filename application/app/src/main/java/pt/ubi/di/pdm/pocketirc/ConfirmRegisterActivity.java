@@ -83,7 +83,7 @@ public class ConfirmRegisterActivity extends Activity{
       }
       //confirmation of registration is successful
       if(RegisterActivity.command_confirmation.get()){
-        Toast toast = Toast.makeText(this, "User" + username + "registered successfully!",Toast.LENGTH_SHORT);
+        Toast toast = Toast.makeText(this, "User " + username + " registered successfully!",Toast.LENGTH_LONG);
         toast.show();
         break;
       }

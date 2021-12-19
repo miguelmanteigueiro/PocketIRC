@@ -20,6 +20,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.lifecycle.Lifecycle;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
@@ -62,6 +63,8 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
   @SuppressLint("StaticFieldLeak")
   static LinearLayout leftDrawer;
   private LinearLayout rightDrawer;
+  //numberOfNotifications
+  long numberOfNotifications=0;
   //private chats list and the chats list
   private ArrayList<String>chatsList;
   private ArrayList<String>privateChatsList;
@@ -78,6 +81,8 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
   public static ArrayList<String>channelUserList=new ArrayList<>();
   //server
   Server server;
+  //canSendNotification
+  private boolean canSendNotification;
   //== methods ==
 
   /**
@@ -332,6 +337,19 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
           }
           //add special message to the list to display User name
           if(m.getMessage_type().equals("C")||m.getMessage_type().equals("UM")||m.getMessage_type().equals("NS")){
+            if(canSendNotification){
+              Intent notificationIntent=new Intent(this,messageNotificationService.class);
+              notificationIntent.putExtra("message",m.getMsg());
+              notificationIntent.putExtra("canSend","true");
+              if(numberOfNotifications==99){
+                notificationIntent.putExtra("numNotifications",numberOfNotifications+"+");
+              }
+              else{
+                notificationIntent.putExtra("numNotifications",String.valueOf(++numberOfNotifications));
+              }
+              notificationIntent.putExtra("whoSent",m.getUser()[0]);
+              startService(notificationIntent);
+            }
             //mention user
             m.setMsg(mention_user(m));
             //checks if the previous user is different from the current
@@ -464,6 +482,23 @@ public class ChatRoom extends AppCompatActivity implements MessageRecyclerViewAd
         }
       }
     );
+  }
+  /**
+   * Can send notifications now
+   */
+  @Override
+  protected void onStop(){
+    super.onStop();
+    canSendNotification=true;
+  }
+  /**
+   * Cannot send notifications now
+   */
+  @Override
+  protected void onResume(){
+    super.onResume();
+    canSendNotification=false;
+    numberOfNotifications=0;
   }
   /**
    * Mentions a user
