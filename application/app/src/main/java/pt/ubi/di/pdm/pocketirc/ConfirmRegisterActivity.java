@@ -97,7 +97,7 @@ public class ConfirmRegisterActivity extends Activity{
       dialog.show();
     }
     //go to login activity
-    RegisterActivity.receive.destroy();
+    RegisterActivity.run.set(false);
     Intent loginIntent=new Intent(this,LoginActivity.class);
     startActivity(loginIntent);
   }
